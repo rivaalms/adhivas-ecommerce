@@ -6,6 +6,8 @@ use App\Http\Resources\ProductCollection;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class ProductController extends Controller
 {
@@ -23,6 +25,8 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        Gate::authorize('role:admin', Auth::user());
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
@@ -55,6 +59,8 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        Gate::authorize('role:admin', Auth::user());
+
         $product = Product::find($id);
 
         if (!$product) {
@@ -79,6 +85,8 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
+        Gate::authorize('role:admin', Auth::user());
+
         $product = Product::find($id);
 
         if (!$product) {
