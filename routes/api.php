@@ -14,5 +14,5 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
 });
 
 Route::middleware('auth:api')->group(function () {
-
+    Route::apiResource('products', \App\Http\Controllers\ProductController::class);
 });
