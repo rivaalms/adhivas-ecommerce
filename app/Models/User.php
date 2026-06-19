@@ -13,6 +13,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Laravel\Sanctum\HasApiTokens;
+use Override;
+use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
 /**
  * @property int $id
@@ -26,10 +28,10 @@ use Laravel\Sanctum\HasApiTokens;
  */
 #[Fillable(['full_name', 'email', 'password', 'role'])]
 #[Hidden(['password'])]
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasFactory, Notifiable;
 
     /**
      * Get the attributes that should be cast.
@@ -42,5 +44,27 @@ class User extends Authenticatable
             'password' => 'hashed',
             'role' => UserRoleEnum::class,
         ];
+    }
+
+    /**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     *
+     * @return mixed
+     */
+    #[Override]
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    #[Override]
+    public function getJWTCustomClaims()
+    {
+        return [];
     }
 }
