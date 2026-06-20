@@ -7,8 +7,12 @@ export default $fetch.create({
    async onResponseError({ response }) {
       const err = response._data as H3Error
 
-      // handle response error here
-      // for example, handle auto-redirect and logout if code is 401
+      if (err.statusCode == 401) {
+         const authStore = useAuthStore()
+         authStore.$reset()
+         navigateTo("/login")
+         return
+      }
 
       // re-throw error to let nuxt handle it
       throw createError({

@@ -15,12 +15,17 @@ export const useAuthStore = defineStore(
          return response
       }
 
+      function $reset() {
+         user.value = null
+      }
+
       return {
          user,
          isLoggedIn,
          getUserRole,
          setUser,
          logout,
+         $reset,
       }
    },
    {
