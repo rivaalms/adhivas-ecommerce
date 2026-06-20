@@ -4,17 +4,16 @@ import { ConfirmationPrompt, FormAddress } from "#components"
 const appStore = useAppStore()
 const authStore = useAuthStore()
 
-// Fetch user addresses from BFF
 const {
-   data: response,
+   data: addresses,
    pending: pendingAddresses,
    refresh: refreshAddresses,
 } = useApi("/api/addresses", {
    method: "get",
    query: { per_page: 50 },
+   transform: (res) =>
+      res.data.data.sort((a, b) => +b.is_default - +a.is_default),
 })
-
-const addresses = computed(() => response.value?.data?.data || [])
 
 function getAddressLine2(item: UserAddressDTO) {
    return (
@@ -175,9 +174,9 @@ async function setDefaultAddress(address: UserAddressDTO) {
                <UCard>
                   <template #header>
                      <div class="flex items-center justify-between">
-                        <h2 class="text-lg font-semibold text-default">
+                        <div class="font-semibold text-highlighted">
                            Alamat Pengiriman
-                        </h2>
+                        </div>
                         <UButton
                            icon="lucide:plus"
                            label="Tambah Alamat"
@@ -227,44 +226,36 @@ async function setDefaultAddress(address: UserAddressDTO) {
                               : 'border-neutral-200 dark:border-neutral-800',
                         ]"
                      >
-                        <div class="flex items-start justify-between">
-                           <div>
-                              <span
-                                 v-if="address.is_default"
-                                 class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary-100 text-primary-800 dark:bg-primary-900 dark:text-primary-200 mb-2"
-                              >
-                                 <UIcon
-                                    name="lucide:check"
-                                    class="size-3"
-                                 />
-                                 Utama
-                              </span>
-                           </div>
-
-                           <!-- Actions -->
-                           <div class="flex items-center gap-2">
-                              <UButton
-                                 icon="lucide:edit"
-                                 variant="ghost"
-                                 color="neutral"
-                                 size="sm"
-                                 @click="openForm(address)"
-                              />
-                              <UButton
-                                 icon="lucide:trash"
-                                 variant="ghost"
-                                 color="error"
-                                 size="sm"
-                                 :disabled="address.is_default"
-                                 @click="confirmDelete(address)"
-                              />
-                           </div>
-                        </div>
-
                         <div class="text-sm">
-                           <p class="font-medium text-default mb-1">
-                              {{ address.address_line }}
-                           </p>
+                           <div class="flex items-center gap-2">
+                              <p class="font-medium text-default mb-1">
+                                 {{ address.address_line }}
+                              </p>
+                              <UBadge
+                                 v-if="address.is_default"
+                                 label="Utama"
+                                 size="xs"
+                                 icon="lucide:check"
+                                 variant="soft"
+                              />
+                              <div class="flex items-center gap-2 ms-auto">
+                                 <UButton
+                                    icon="lucide:edit"
+                                    variant="ghost"
+                                    color="neutral"
+                                    size="sm"
+                                    @click="openForm(address)"
+                                 />
+                                 <UButton
+                                    icon="lucide:trash"
+                                    variant="ghost"
+                                    color="error"
+                                    size="sm"
+                                    :disabled="address.is_default"
+                                    @click="confirmDelete(address)"
+                                 />
+                              </div>
+                           </div>
                            <p class="text-muted">
                               {{ getAddressLine2(address) }}
                            </p>
