@@ -89,6 +89,12 @@ class OrderController extends Controller
                     $order->orderDetails()->create($itemData);
                 }
 
+                // Delete checked-out items from user's cart
+                if ($cart = $user->cart) {
+                    $productIds = array_column($validated['items'], 'product_id');
+                    $cart->cartItems()->whereIn('product_id', $productIds)->delete();
+                }
+
                 return $order;
             });
 

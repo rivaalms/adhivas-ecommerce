@@ -1,5 +1,9 @@
+type CartData = Omit<CartDTO, "items"> & {
+   items: (CartItemDTO & { selected: boolean })[]
+}
+
 export const useCartStore = defineStore("cart-store", () => {
-   const cart = ref<CartDTO>()
+   const cart = ref<CartData>()
 
    async function fetchCart() {
       try {
@@ -7,7 +11,13 @@ export const useCartStore = defineStore("cart-store", () => {
             method: "get",
          })
 
-         cart.value = response.data
+         cart.value = {
+            ...response.data,
+            items: response.data.items.map((item) => ({
+               ...item,
+               selected: false,
+            })),
+         }
       } catch {
          cart.value = undefined
       }
@@ -22,7 +32,13 @@ export const useCartStore = defineStore("cart-store", () => {
             body: payload,
          })
 
-         cart.value = response.data
+         cart.value = {
+            ...response.data,
+            items: response.data.items.map((item) => ({
+               ...item,
+               selected: false,
+            })),
+         }
 
          return response
       } catch (e) {
@@ -39,7 +55,13 @@ export const useCartStore = defineStore("cart-store", () => {
             },
          })
 
-         cart.value = response.data
+         cart.value = {
+            ...response.data,
+            items: response.data.items.map((item) => ({
+               ...item,
+               selected: false,
+            })),
+         }
 
          return response
       } catch (e) {
@@ -47,10 +69,23 @@ export const useCartStore = defineStore("cart-store", () => {
       }
    }
 
+   async function checkoutItems(
+      payload: InferFnSchema<typeof $orderSchema, "store">
+   ) {
+      const response = await $api(`/api/orders`, {
+         method: "post",
+         body: payload,
+      })
+
+      fetchCart()
+      return response
+   }
+
    return {
       cart,
       fetchCart,
       addCartItem,
       removeCartItem,
+      checkoutItems,
    }
 })

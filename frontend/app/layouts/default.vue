@@ -42,6 +42,26 @@ const userMenuItems = computed<DropdownMenuItem[][]>(() => [
    ],
 ])
 
+function selectAllCartItems() {
+   cartStore.cart?.items.forEach((item) => {
+      item.selected = true
+   })
+}
+
+function checkoutItems() {
+   const selected = cartStore.cart?.items.filter((item) => item.selected) || []
+   if (selected.length === 0) {
+      appStore.notify({
+         title: "Checkout Gagal",
+         description:
+            "Silakan pilih minimal satu produk di keranjang belanja Anda.",
+         color: "warning",
+      })
+      return
+   }
+   navigateTo("/checkout")
+}
+
 onMounted(() => {
    cartStore.fetchCart()
 })
@@ -75,6 +95,7 @@ onMounted(() => {
                   >
                      <UChip
                         :text="cartStore.cart?.items?.length ?? 0"
+                        :show="!!cartStore.cart?.items.length"
                         color="error"
                         variant="solid"
                         size="xl"
@@ -89,6 +110,18 @@ onMounted(() => {
                      </UChip>
                      <template #content>
                         <div class="p-2">
+                           <div class="flex items-center">
+                              <UButton
+                                 icon="lucide:check-check"
+                                 label="Pilih Semua"
+                                 size="sm"
+                                 variant="ghost"
+                                 color="neutral"
+                                 @click="selectAllCartItems"
+                              />
+                           </div>
+                           <USeparator class="my-2" />
+
                            <UEmpty
                               v-if="!cartStore.cart?.items.length"
                               icon="lucide:shopping-cart"
@@ -98,16 +131,23 @@ onMounted(() => {
                            />
                            <template v-else>
                               <div
-                                 class="flex flex-col max-h-40 overflow-y-auto"
+                                 class="flex flex-col max-h-64 overflow-y-auto"
                               >
-                                 <NuxtLink
+                                 <div
                                     v-for="item in cartStore.cart.items"
                                     :key="item.id"
-                                    :to="`/products/${item.product?.id}`"
-                                    class="group rounded-md overflow-hidden"
+                                    class="flex items-center gap-2 p-2 rounded-md hover:bg-muted transition"
                                  >
-                                    <div
-                                       class="flex items-center gap-2 group-hover:bg-muted transition p-2"
+                                    <div class="self-start">
+                                       <UCheckbox
+                                          v-model="item.selected"
+                                          class="z-10"
+                                          @click.stop
+                                       />
+                                    </div>
+                                    <NuxtLink
+                                       class="flex-1 flex items-center gap-2"
+                                       :to="`/products/${item.product?.id}`"
                                     >
                                        <div
                                           class="bg-accented rounded-md aspect-square size-12"
@@ -147,8 +187,8 @@ onMounted(() => {
                                              </span>
                                           </div>
                                        </div>
-                                    </div>
-                                 </NuxtLink>
+                                    </NuxtLink>
+                                 </div>
                               </div>
                               <USeparator class="my-2" />
                               <div class="flex items-center">
@@ -157,6 +197,7 @@ onMounted(() => {
                                     label="Checkout"
                                     class="ms-auto"
                                     size="sm"
+                                    @click="checkoutItems"
                                  />
                               </div>
                            </template>
