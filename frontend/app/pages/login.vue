@@ -27,7 +27,11 @@ async function onSubmit(data: InferFnSchema<typeof $authSchema, "login">) {
          color: "success",
       })
 
-      navigateTo("/")
+      if (authStore.getUserRole === "admin") {
+         navigateTo("/admin")
+      } else {
+         navigateTo("/")
+      }
    } catch (e) {
       $notifyError(e)
    } finally {
@@ -37,11 +41,8 @@ async function onSubmit(data: InferFnSchema<typeof $authSchema, "login">) {
 </script>
 
 <template>
-   <div
-      class="flex items-center h-[calc(100vh-var(--ui-header-height))] justify-center"
-   >
+   <div class="flex items-center h-screen justify-center">
       <div class="w-full max-w-md">
-         <!-- Premium Glassmorphic Card -->
          <UCard>
             <template #header>
                <div class="text-center py-2">

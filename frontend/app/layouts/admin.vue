@@ -1,23 +1,8 @@
 <script setup lang="ts">
-import type { DropdownMenuItem, NavigationMenuItem } from "@nuxt/ui"
+import type { DropdownMenuItem } from "@nuxt/ui"
 
 const authStore = useAuthStore()
 const appStore = useAppStore()
-
-const items = computed<NavigationMenuItem[]>(() => [
-   {
-      label: "Home",
-      to: "/",
-   },
-   {
-      label: "Form Handling",
-      to: "/form-handling",
-   },
-   {
-      label: "Modal Form",
-      to: "/modal-form",
-   },
-])
 
 const userMenuItems = computed<DropdownMenuItem[][]>(() => [
    [{ label: "Profile", icon: "lucide:user" }],
@@ -43,30 +28,48 @@ const userMenuItems = computed<DropdownMenuItem[][]>(() => [
 </script>
 
 <template>
-   <div
-      class="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-550"
+   <UDashboardGroup
+      unit="rem"
+      storage-key="layout"
    >
-      <!-- UHeader from Nuxt UI -->
-      <UHeader
-         title="Adhivas E-Commerce"
-         to="/"
+      <UDashboardSidebar
+         resizable
+         collapsible
+         :default-size="16"
+         :min-size="16"
       >
-         <template #title>
+         <template #header="{ collapsed }">
             <span
-               class="bg-linear-to-r from-primary-500 to-indigo-500 bg-clip-text text-xl font-bold tracking-tight text-transparent dark:from-primary-400 dark:to-indigo-400"
+               v-show="!collapsed"
+               class="bg-linear-to-r from-primary-500 to-indigo-500 bg-clip-text font-bold tracking-tight text-transparent dark:from-primary-400 dark:to-indigo-400"
             >
                Adhivas E-Commerce
             </span>
          </template>
-
-         <UNavigationMenu
-            :items="items"
-            variant="link"
-         />
-
-         <template #right>
-            <div class="flex items-center gap-4">
-               <template v-if="authStore.isLoggedIn">
+         <template #default="{ collapsed }">
+            <UNavigationMenu
+               :items="[]"
+               :collapsed="collapsed"
+               orientation="vertical"
+            />
+            <UNavigationMenu
+               :items="[]"
+               :collapsed="collapsed"
+               popover
+               orientation="vertical"
+               class="mt-auto"
+            />
+         </template>
+      </UDashboardSidebar>
+      <UDashboardPanel>
+         <template #header>
+            <UDashboardNavbar>
+               <template #left>
+                  <UTooltip text="Toggle Sidebar">
+                     <UDashboardSidebarCollapse />
+                  </UTooltip>
+               </template>
+               <template #right>
                   <UDropdownMenu :items="userMenuItems">
                      <div class="group flex items-center justify-between gap-2">
                         <UUser
@@ -86,31 +89,11 @@ const userMenuItems = computed<DropdownMenuItem[][]>(() => [
                      </div>
                   </UDropdownMenu>
                </template>
-               <template v-else>
-                  <UButton
-                     to="/login"
-                     color="primary"
-                     variant="solid"
-                     size="sm"
-                     label="Login"
-                  />
-               </template>
-            </div>
+            </UDashboardNavbar>
          </template>
-
          <template #body>
-            <UNavigationMenu
-               :items="items"
-               orientation="vertical"
-               class="-mx-2.5"
-            />
-         </template>
-      </UHeader>
-
-      <UMain>
-         <UContainer>
             <slot />
-         </UContainer>
-      </UMain>
-   </div>
+         </template>
+      </UDashboardPanel>
+   </UDashboardGroup>
 </template>

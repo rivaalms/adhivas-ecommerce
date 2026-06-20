@@ -6,6 +6,11 @@ export default defineNuxtConfig({
 
    css: ["~/assets/css/main.css"],
 
+   routeRules: {
+      "/admin/**": { appLayout: "admin" },
+      "/login": { appLayout: false },
+   },
+
    modules: [
       "@nuxt/ui",
       "@pinia/nuxt",
