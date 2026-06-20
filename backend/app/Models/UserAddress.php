@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
-use Override;
 
 /**
  * @property int $id
@@ -20,11 +20,12 @@ use Override;
  * @property string $province_name
  * @property string $postal_code
  * @property bool $is_default
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  */
 #[Fillable(['user_id', 'address_line', 'subdistrict_id', 'subdistrict_name', 'district_id', 'district_name', 'regency_id', 'regency_name', 'province_id', 'province_name', 'postal_code', 'is_default'])]
-class UserAddress extends Model {
+class UserAddress extends Model
+{
     protected function casts(): array
     {
         return [

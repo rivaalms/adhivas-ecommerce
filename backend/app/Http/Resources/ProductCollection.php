@@ -4,7 +4,6 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use App\Http\Resources\ProductResource;
 
 class ProductCollection extends ResourceCollection
 {
@@ -21,8 +20,8 @@ class ProductCollection extends ResourceCollection
                 'page' => $this->resource->currentPage(),
                 'per_page' => $this->resource->perPage(),
                 'last_page' => $this->resource->lastPage(),
-                'total' => $this->resource->total()
-            ]
+                'total' => $this->resource->total(),
+            ],
         ];
     }
 }

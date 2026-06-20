@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
-use Laravel\Sanctum\HasApiTokens;
 use Override;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
@@ -22,7 +21,7 @@ use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
  * @property string $email
  * @property Carbon|null $email_verified_at
  * @property string $password
- * @property \App\Enums\UserRoleEnum $role
+ * @property UserRoleEnum $role
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */

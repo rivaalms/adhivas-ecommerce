@@ -2,19 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Enum\OrderStatusEnum;
+use App\Enums\UserRoleEnum;
 use App\Http\Resources\OrderCollection;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
-use App\Models\OrderDetail;
 use App\Models\Product;
-use App\Enums\UserRoleEnum;
-use App\Enums\Enum\OrderStatusEnum;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\ValidationException;
 
 class OrderController extends Controller
 {
@@ -60,7 +59,7 @@ class OrderController extends Controller
             'user_address_id' => [
                 'required',
                 'integer',
-                'exists:user_addresses,id,user_id,' . $user->id
+                'exists:user_addresses,id,user_id,'.$user->id,
             ],
             'items' => ['required', 'array', 'min:1'],
             'items.*.product_id' => ['required', 'integer', 'exists:products,id'],
@@ -77,7 +76,7 @@ class OrderController extends Controller
 
                     if ($product->stock_quantity < $item['quantity']) {
                         throw ValidationException::withMessages([
-                            'items' => "Insufficient stock for product: {$product->name}. Available: {$product->stock_quantity}."
+                            'items' => "Insufficient stock for product: {$product->name}. Available: {$product->stock_quantity}.",
                         ]);
                     }
 
@@ -88,7 +87,7 @@ class OrderController extends Controller
                     $itemsData[] = [
                         'product_id' => $product->id,
                         'quantity' => $item['quantity'],
-                        'price' => $product->price
+                        'price' => $product->price,
                     ];
                 }
 
@@ -119,7 +118,7 @@ class OrderController extends Controller
         } catch (ValidationException $e) {
             throw $e;
         } catch (\Exception $e) {
-            return $this->response(null, 'Failed to place order: ' . $e->getMessage(), 500);
+            return $this->response(null, 'Failed to place order: '.$e->getMessage(), 500);
         }
     }
 
@@ -134,7 +133,7 @@ class OrderController extends Controller
             return $query->where('user_id', $user->id);
         })->with(['user', 'userAddress', 'orderDetails.product'])->find($id);
 
-        if (!$order) {
+        if (! $order) {
             return $this->response(null, 'Order not found', 404);
         }
 
@@ -148,7 +147,7 @@ class OrderController extends Controller
     {
         $user = Auth::user();
         $order = Order::where('user_id', $user->id)->find($id);
-        if (!$order) {
+        if (! $order) {
             return $this->response(null, 'Order not found', 404);
         }
 
@@ -161,7 +160,7 @@ class OrderController extends Controller
                 'sometimes',
                 'required',
                 'integer',
-                'exists:user_addresses,id,user_id,' . ($user->role === UserRoleEnum::ADMIN ? $order->user_id : $user->id)
+                'exists:user_addresses,id,user_id,'.($user->role === UserRoleEnum::ADMIN ? $order->user_id : $user->id),
             ],
         ]);
 
@@ -177,7 +176,7 @@ class OrderController extends Controller
     public function updateStatus(Request $request, string $id)
     {
         $order = Order::find($id);
-        if (!$order) {
+        if (! $order) {
             return $this->response(null, 'Order not found', 404);
         }
 
@@ -205,7 +204,7 @@ class OrderController extends Controller
             }
         } else {
             $validated = $request->validate([
-                'status' => ['required', 'string', 'in:' . implode(',', array_column(OrderStatusEnum::cases(), 'value'))],
+                'status' => ['required', 'string', 'in:'.implode(',', array_column(OrderStatusEnum::cases(), 'value'))],
             ]);
 
             $newStatus = OrderStatusEnum::from($validated['status']);
@@ -223,6 +222,7 @@ class OrderController extends Controller
         }
 
         $order->load(['userAddress', 'orderDetails.product']);
+
         return $this->response(new OrderResource($order), 'Order status updated successfully');
     }
 
@@ -234,7 +234,7 @@ class OrderController extends Controller
         Gate::authorize('role:admin', Auth::user());
 
         $order = Order::find($id);
-        if (!$order) {
+        if (! $order) {
             return $this->response(null, 'Order not found', 404);
         }
 

@@ -20,8 +20,8 @@ class UserAddressCollection extends ResourceCollection
                 'page' => $this->resource->currentPage(),
                 'per_page' => $this->resource->perPage(),
                 'last_page' => $this->resource->lastPage(),
-                'total' => $this->resource->total()
-            ]
+                'total' => $this->resource->total(),
+            ],
         ];
     }
 }

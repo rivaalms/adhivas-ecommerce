@@ -4,7 +4,6 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use App\Http\Resources\CategoryResource;
 
 class CategoryCollection extends ResourceCollection
 {
@@ -28,8 +27,8 @@ class CategoryCollection extends ResourceCollection
                 'page' => $this->resource->currentPage(),
                 'per_page' => $this->resource->perPage(),
                 'last_page' => $this->resource->lastPage(),
-                'total' => $this->resource->total()
-            ]
+                'total' => $this->resource->total(),
+            ],
         ];
     }
 }

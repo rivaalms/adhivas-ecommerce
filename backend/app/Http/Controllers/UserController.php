@@ -18,9 +18,9 @@ class UserController extends Controller
         Gate::authorize('role:admin', Auth::user());
 
         $users = User::when($request->search, function ($query, $search) {
-                return $query->where('full_name', 'ilike', "%{$search}%")
-                    ->orWhere('email', 'ilike', "%{$search}%");
-            })
+            return $query->where('full_name', 'ilike', "%{$search}%")
+                ->orWhere('email', 'ilike', "%{$search}%");
+        })
             ->when($request->role, function ($query, $role) {
                 return $query->where('role', $role);
             })

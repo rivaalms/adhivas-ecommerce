@@ -2,8 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::inertia('/', 'Welcome')->name('home');
-
-Route::middleware(['auth:web'])->group(function () {
-    Route::inertia('test', 'Welcome')->name('auth');
-});
+Route::get('/', function () {
+    return response()->json([
+        'app' => config('app.name'),
+        'status' => 'OK',
+        'api_version' => '1.0.0',
+    ]);
+})->name('home');

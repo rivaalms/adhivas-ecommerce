@@ -26,8 +26,10 @@ class ProductController extends Controller
                 $allowedFields = ['price', 'created_at'];
                 if (in_array($sortBy, $allowedFields)) {
                     $sortDir = $request->input('sort_dir', 'asc') === 'desc' ? 'desc' : 'asc';
+
                     return $query->orderBy($sortBy, $sortDir);
                 }
+
                 return $query;
             }, function ($query) {
                 return $query->orderBy('created_at', 'desc');
@@ -67,7 +69,7 @@ class ProductController extends Controller
     {
         $product = Product::with(['categories'])->find($id);
 
-        if (!$product) {
+        if (! $product) {
             return $this->response(null, 'Product not found', 404);
         }
 
@@ -83,7 +85,7 @@ class ProductController extends Controller
 
         $product = Product::find($id);
 
-        if (!$product) {
+        if (! $product) {
             return $this->response(null, 'Product not found', 404);
         }
 
@@ -115,7 +117,7 @@ class ProductController extends Controller
 
         $product = Product::find($id);
 
-        if (!$product) {
+        if (! $product) {
             return $this->response(null, 'Product not found', 404);
         }
 

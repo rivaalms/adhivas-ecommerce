@@ -8,7 +8,6 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class CategoryController extends Controller
@@ -19,9 +18,10 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         $categories = Category::when($request->search ?? $request->name, function ($query, $search) {
-                return $query->where('name', 'ilike', "%{$search}%");
-            })
+            return $query->where('name', 'ilike', "%{$search}%");
+        })
             ->paginate($request->input('per_page', 10));
+
         return $this->response(new CategoryCollection($categories), 'Categories retrieved successfully');
     }
 
@@ -33,7 +33,7 @@ class CategoryController extends Controller
         Gate::authorize('role:admin', Auth::user());
 
         $validated = $request->merge([
-            'slug' => Str::slug($request->name)
+            'slug' => Str::slug($request->name),
         ])->validate([
             'name' => ['required', 'string', 'max:255'],
             'slug' => ['required', 'string', 'max:255', 'unique:categories,slug'],
@@ -51,7 +51,7 @@ class CategoryController extends Controller
     {
         $category = Category::find($id);
 
-        if (!$category) {
+        if (! $category) {
             return $this->response(null, 'Category not found', 404);
         }
 
@@ -67,12 +67,12 @@ class CategoryController extends Controller
 
         $category = Category::find($id);
 
-        if (!$category) {
+        if (! $category) {
             return $this->response(null, 'Category not found', 404);
         }
 
         $validated = $request->merge([
-            'slug' => Str::slug($request->name)
+            'slug' => Str::slug($request->name),
         ])->validate([
             'name' => ['sometimes', 'required', 'string', 'max:255'],
             'slug' => ['sometimes', 'required', 'string', 'max:255', "unique:categories,slug,{$id}"],
@@ -92,7 +92,7 @@ class CategoryController extends Controller
 
         $category = Category::find($id);
 
-        if (!$category) {
+        if (! $category) {
             return $this->response(null, 'Category not found', 404);
         }
 

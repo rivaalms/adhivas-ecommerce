@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\CartResource;
 use App\Models\Cart;
-use App\Models\CartItem;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -67,13 +66,13 @@ class CartController extends Controller
         $user = Auth::user();
         $cart = $user->cart;
 
-        if (!$cart) {
+        if (! $cart) {
             return $this->response(null, 'Cart item not found', 404);
         }
 
         $cartItem = $cart->cartItems()->find($id);
 
-        if (!$cartItem) {
+        if (! $cartItem) {
             return $this->response(null, 'Cart item not found', 404);
         }
 

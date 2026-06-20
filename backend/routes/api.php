@@ -1,7 +1,12 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\UserAddressController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->controller(AuthController::class)->group(function () {
@@ -14,13 +19,13 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
 });
 
 Route::middleware('auth:api')->group(function () {
-    Route::apiResource('products', \App\Http\Controllers\ProductController::class);
-    Route::apiResource('categories', \App\Http\Controllers\CategoryController::class);
-    Route::apiResource('addresses', \App\Http\Controllers\UserAddressController::class);
-    Route::get('users', [\App\Http\Controllers\UserController::class, 'index']);
-    Route::patch('orders/{id}/status', [\App\Http\Controllers\OrderController::class, 'updateStatus']);
-    Route::apiResource('orders', \App\Http\Controllers\OrderController::class);
-    Route::get('cart', [\App\Http\Controllers\CartController::class, 'index']);
-    Route::post('cart', [\App\Http\Controllers\CartController::class, 'store']);
-    Route::delete('cart/items/{id}', [\App\Http\Controllers\CartController::class, 'destroy']);
+    Route::apiResource('products', ProductController::class);
+    Route::apiResource('categories', CategoryController::class);
+    Route::apiResource('addresses', UserAddressController::class);
+    Route::get('users', [UserController::class, 'index']);
+    Route::patch('orders/{id}/status', [OrderController::class, 'updateStatus']);
+    Route::apiResource('orders', OrderController::class);
+    Route::get('cart', [CartController::class, 'index']);
+    Route::post('cart', [CartController::class, 'store']);
+    Route::delete('cart/items/{id}', [CartController::class, 'destroy']);
 });

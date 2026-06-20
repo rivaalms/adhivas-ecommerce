@@ -17,6 +17,7 @@ class UserAddressController extends Controller
     public function index(Request $request)
     {
         $addresses = $request->user()->addresses()->paginate($request->per_page);
+
         return $this->response(new UserAddressCollection($addresses), 'Addresses retrieved successfully');
     }
 
@@ -42,7 +43,7 @@ class UserAddressController extends Controller
             'is_default' => ['nullable', 'boolean'],
         ]);
 
-        $isFirstAddress = !UserAddress::where('user_id', $user->id)->exists();
+        $isFirstAddress = ! UserAddress::where('user_id', $user->id)->exists();
 
         $validated['is_default'] = $isFirstAddress || ($validated['is_default'] ?? false);
 
@@ -62,7 +63,7 @@ class UserAddressController extends Controller
     {
         $address = UserAddress::where('user_id', Auth::user()->id)->find($id);
 
-        if (!$address) {
+        if (! $address) {
             return $this->response(null, 'Address not found', 404);
         }
 
@@ -79,7 +80,7 @@ class UserAddressController extends Controller
 
         $address = UserAddress::where('user_id', $user->id)->find($id);
 
-        if (!$address) {
+        if (! $address) {
             return $this->response(null, 'Address not found', 404);
         }
 
@@ -117,7 +118,7 @@ class UserAddressController extends Controller
 
         $address = UserAddress::where('user_id', $user->id)->find($id);
 
-        if (!$address) {
+        if (! $address) {
             return $this->response(null, 'Address not found', 404);
         }
 

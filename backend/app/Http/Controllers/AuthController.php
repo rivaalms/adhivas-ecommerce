@@ -20,7 +20,7 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         $token = Auth::attempt($credentials);
-        if (!$token) {
+        if (! $token) {
             return $this->response(null, 'Unauthorized', 401);
         }
 
@@ -62,6 +62,7 @@ class AuthController extends Controller
     public function logout()
     {
         Auth::logout();
+
         return $this->response(null, 'Successfully logged out');
     }
 
