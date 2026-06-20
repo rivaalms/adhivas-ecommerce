@@ -16,7 +16,7 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $products = Product::paginate($request->per_page);
+        $products = Product::with(['categories'])->paginate($request->per_page);
         return $this->response(new ProductCollection($products), 'Products retrieved successfully');
     }
 

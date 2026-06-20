@@ -28,4 +28,9 @@ class Category extends Model
             'slug' => 'string',
         ];
     }
+
+    protected function product()
+    {
+        return $this->belongsToMany(Product::class, 'product_category');
+    }
 }

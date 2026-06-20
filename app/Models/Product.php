@@ -37,4 +37,9 @@ class Product extends Model
             'stock_quantity' => 'integer',
         ];
     }
+
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'product_category');
+    }
 }
