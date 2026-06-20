@@ -39,21 +39,21 @@ class AuthController extends Controller
         $request->validate([
             'full_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:6'],
+            'password' => ['required', 'string', 'min:6', 'confirmed'],
         ]);
 
         $user = User::create([
-            'name' => $request->name,
+            'full_name' => $request->full_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => UserRoleEnum::CUSTOMER,
         ]);
 
-        $token = Auth::attempt($user);
+        $token = Auth::attempt($request->only('email', 'password'));
 
         return $this->response([
             'user' => $user,
-            'token' => $token,
+            'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => Auth::factory()->getTTL() * 60,
         ], 'User registered successfully');

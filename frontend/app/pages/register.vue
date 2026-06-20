@@ -10,11 +10,11 @@ if (authStore.isLoggedIn) {
 
 const loading = shallowRef(false)
 
-async function onSubmit(data: InferFnSchema<typeof $authSchema, "login">) {
+async function onSubmit(data: InferFnSchema<typeof $authSchema, "register">) {
    loading.value = true
    try {
-      // Call the BFF login proxy API
-      const response = await $api("/api/auth/login", {
+      // Call the BFF register proxy API
+      const response = await $api("/api/auth/register", {
          method: "POST",
          body: data,
       })
@@ -22,16 +22,13 @@ async function onSubmit(data: InferFnSchema<typeof $authSchema, "login">) {
       authStore.setUser(response.data)
 
       appStore.notify({
-         title: "Login Berhasil",
-         description: response.message || "Selamat datang kembali!",
+         title: "Registrasi Berhasil",
+         description:
+            response.message || "Selamat bergabung di Adhivas E-Commerce!",
          color: "success",
       })
 
-      if (authStore.getUserRole === "admin") {
-         navigateTo("/admin")
-      } else {
-         navigateTo("/")
-      }
+      navigateTo("/")
    } catch (e) {
       $notifyError(e)
    } finally {
@@ -41,7 +38,7 @@ async function onSubmit(data: InferFnSchema<typeof $authSchema, "login">) {
 </script>
 
 <template>
-   <div class="flex items-center h-screen justify-center">
+   <div class="flex items-center h-screen justify-center bg-muted/30">
       <div class="w-full max-w-md">
          <UCard>
             <template #header>
@@ -51,25 +48,25 @@ async function onSubmit(data: InferFnSchema<typeof $authSchema, "login">) {
                   >
                      Adhivas E-Commerce
                   </h1>
-                  <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
-                     Silakan masuk ke akun Anda untuk melanjutkan belanja
+                  <p class="mt-2 text-sm text-muted">
+                     Daftar akun baru untuk mulai berbelanja
                   </p>
                </div>
             </template>
 
             <div class="py-4">
-               <FormAuth
+               <FormRegister
                   :loading="loading"
                   @submit="onSubmit"
                />
 
                <div class="mt-6 text-center text-sm text-muted">
-                  Belum punya akun?
+                  Sudah punya akun?
                   <NuxtLink
-                     to="/register"
+                     to="/login"
                      class="text-primary hover:underline"
                   >
-                     Daftar sekarang
+                     Login disini
                   </NuxtLink>
                </div>
             </div>
