@@ -3,6 +3,7 @@ import type { DropdownMenuItem, NavigationMenuItem } from "@nuxt/ui"
 
 const authStore = useAuthStore()
 const appStore = useAppStore()
+const cartStore = useCartStore()
 
 const items = computed<NavigationMenuItem[]>(() => [
    {
@@ -40,13 +41,14 @@ const userMenuItems = computed<DropdownMenuItem[][]>(() => [
       },
    ],
 ])
+
+onMounted(() => {
+   cartStore.fetchCart()
+})
 </script>
 
 <template>
-   <div
-      class="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-550"
-   >
-      <!-- UHeader from Nuxt UI -->
+   <div class="bg-muted">
       <UHeader
          title="Adhivas E-Commerce"
          to="/"
@@ -67,6 +69,100 @@ const userMenuItems = computed<DropdownMenuItem[][]>(() => [
          <template #right>
             <div class="flex items-center gap-4">
                <template v-if="authStore.isLoggedIn">
+                  <UPopover
+                     mode="hover"
+                     :ui="{ content: 'min-w-sm' }"
+                  >
+                     <UChip
+                        :text="cartStore.cart?.items?.length ?? 0"
+                        color="error"
+                        variant="solid"
+                        size="xl"
+                        inset
+                        position="top-right"
+                     >
+                        <UButton
+                           icon="lucide:shopping-cart"
+                           variant="ghost"
+                           color="neutral"
+                        />
+                     </UChip>
+                     <template #content>
+                        <div class="p-2">
+                           <UEmpty
+                              v-if="!cartStore.cart?.items.length"
+                              icon="lucide:shopping-cart"
+                              title="Keranjang belanjamu kosong"
+                              description="Tambah produk pilihanmu untuk melengkapi pesananmu."
+                              variant="naked"
+                           />
+                           <template v-else>
+                              <div
+                                 class="flex flex-col max-h-40 overflow-y-auto"
+                              >
+                                 <NuxtLink
+                                    v-for="item in cartStore.cart.items"
+                                    :key="item.id"
+                                    :to="`/products/${item.product?.id}`"
+                                    class="group rounded-md overflow-hidden"
+                                 >
+                                    <div
+                                       class="flex items-center gap-2 group-hover:bg-muted transition p-2"
+                                    >
+                                       <div
+                                          class="bg-accented rounded-md aspect-square size-12"
+                                       >
+                                          <img
+                                             :src="
+                                                item.product?.image_url ??
+                                                'https://picsum.photos/seed/picsum/200/200'
+                                             "
+                                             class="h-12 w-12 rounded-md object-cover aspect-square"
+                                          />
+                                       </div>
+                                       <div class="flex flex-col flex-1">
+                                          <div class="line-clamp-1 text-sm">
+                                             {{ item.product?.name }}
+                                          </div>
+                                          <div class="flex items-center">
+                                             <span
+                                                class="font-semibold text-sm"
+                                             >
+                                                {{
+                                                   $formatNumber(
+                                                      item.product?.price ?? 0,
+                                                      {
+                                                         style: "currency",
+                                                         currency: "IDR",
+                                                         currencyDisplay:
+                                                            "narrowSymbol",
+                                                      }
+                                                   )
+                                                }}
+                                             </span>
+                                             <span
+                                                class="ms-auto text-xs text-muted"
+                                             >
+                                                Qty: {{ item.quantity }}
+                                             </span>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </NuxtLink>
+                              </div>
+                              <USeparator class="my-2" />
+                              <div class="flex items-center">
+                                 <UButton
+                                    icon="lucide:shopping-cart"
+                                    label="Checkout"
+                                    class="ms-auto"
+                                    size="sm"
+                                 />
+                              </div>
+                           </template>
+                        </div>
+                     </template>
+                  </UPopover>
                   <UDropdownMenu :items="userMenuItems">
                      <div class="group flex items-center justify-between gap-2">
                         <UUser
