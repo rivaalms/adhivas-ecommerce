@@ -19,4 +19,7 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('addresses', \App\Http\Controllers\UserAddressController::class);
     Route::patch('orders/{id}/status', [\App\Http\Controllers\OrderController::class, 'updateStatus']);
     Route::apiResource('orders', \App\Http\Controllers\OrderController::class);
+    Route::get('cart', [\App\Http\Controllers\CartController::class, 'index']);
+    Route::post('cart', [\App\Http\Controllers\CartController::class, 'store']);
+    Route::delete('cart/items/{id}', [\App\Http\Controllers\CartController::class, 'destroy']);
 });
