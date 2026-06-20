@@ -3,7 +3,7 @@ import type { FormSubmitEvent } from "@nuxt/ui"
 
 const props = withDefaults(
    defineProps<{
-      data?: AuthDTO
+      data?: LoginDTO
       /**
        * Loading prop accepts both primitive `boolean` and `ref()`
        * since this component can be rendered on template or using render function.

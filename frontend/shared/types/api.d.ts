@@ -4,9 +4,8 @@
  * change this interface accordingly
  */
 interface ApiResponse<T> {
-   success: boolean
+   status: "success" | "error"
    message: string
-   error: string
    data: T
 }
 
