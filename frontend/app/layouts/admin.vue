@@ -58,18 +58,27 @@ const navigationItem = [
       storage-key="layout"
    >
       <UDashboardSidebar
-         resizable
          collapsible
          :default-size="16"
          :min-size="16"
       >
          <template #header="{ collapsed }">
-            <span
-               v-show="!collapsed"
-               class="bg-linear-to-r from-primary-500 to-indigo-500 bg-clip-text font-bold tracking-tight text-transparent dark:from-primary-400 dark:to-indigo-400"
+            <NuxtLink
+               to="/admin"
+               class="flex items-center justify-center gap-2"
             >
-               Adhivas E-Commerce
-            </span>
+               <img
+                  src="/logo.svg"
+                  class="h-6 w-auto"
+                  alt="Adhivas E-Commerce Logo"
+               />
+               <span
+                  v-show="!collapsed"
+                  class="font-bold tracking-tight text-primary"
+               >
+                  Adhivas E-Commerce
+               </span>
+            </NuxtLink>
          </template>
          <template #default="{ collapsed }">
             <UNavigationMenu

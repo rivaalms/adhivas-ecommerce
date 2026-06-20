@@ -5,49 +5,61 @@ const authStore = useAuthStore()
 const appStore = useAppStore()
 const cartStore = useCartStore()
 
-const items = computed<NavigationMenuItem[]>(() => [
-   {
-      label: "Beranda",
-      to: "/",
-   },
-   {
-      label: "Produk",
-      to: "/products",
-   },
-])
-
-const userMenuItems = computed<DropdownMenuItem[][]>(() => [
-   [
-      {
-         label: "Profile",
-         icon: "lucide:user",
-         onSelect: () => navigateTo("/profile"),
-      },
-      {
-         label: "Pesanan Saya",
-         icon: "lucide:shopping-bag",
-         onSelect: () => navigateTo("/orders"),
-      },
-   ],
-   [
-      {
-         label: "Logout",
-         icon: "lucide:log-out",
-         color: "error",
-         onSelect: async () => {
-            try {
-               const response = await authStore.logout()
-               appStore.notify({
-                  title: response.message,
-               })
-               navigateTo("/login")
-            } catch (e) {
-               $notifyError(e)
-            }
+const items = computed(
+   () =>
+      [
+         {
+            label: "Beranda",
+            icon: "lucide:home",
+            to: "/",
          },
-      },
-   ],
-])
+         {
+            label: "Produk",
+            icon: "lucide:shopping-bag",
+            to: "/products",
+         },
+      ] satisfies NavigationMenuItem[]
+)
+
+const userMenuItems = computed(
+   () =>
+      [
+         [
+            {
+               label: "Profile",
+               icon: "lucide:user",
+               onSelect: () => navigateTo("/profile"),
+            },
+            {
+               label: "Pesanan Saya",
+               icon: "lucide:shopping-bag",
+               onSelect: () => navigateTo("/orders"),
+            },
+         ],
+         [
+            {
+               label: "Logout",
+               icon: "lucide:log-out",
+               color: "error",
+               onSelect: async () => {
+                  try {
+                     const response = await authStore.logout()
+                     appStore.notify({
+                        title: response.message,
+                     })
+                     navigateTo("/login")
+                  } catch (e) {
+                     $notifyError(e)
+                  }
+               },
+            },
+         ],
+      ] satisfies DropdownMenuItem[][]
+)
+
+const mergedMenuItems = computed(() => {
+   return [items.value, ...userMenuItems.value] satisfies NavigationMenuItem[][]
+})
 
 function selectAllCartItems() {
    cartStore.cart?.items.forEach((item) => {
@@ -81,11 +93,19 @@ onMounted(() => {
          to="/"
       >
          <template #title>
-            <span
-               class="bg-linear-to-r from-primary-500 to-indigo-500 bg-clip-text text-xl font-bold tracking-tight text-transparent dark:from-primary-400 dark:to-indigo-400"
+            <NuxtLink
+               to="/"
+               class="flex items-center gap-2"
             >
-               Adhivas E-Commerce
-            </span>
+               <img
+                  src="/logo.svg"
+                  class="h-6 w-auto"
+                  alt="Adhivas E-Commerce Logo"
+               />
+               <span class="text-lg font-bold tracking-tight text-primary">
+                  Adhivas E-Commerce
+               </span>
+            </NuxtLink>
          </template>
 
          <UNavigationMenu
@@ -96,10 +116,7 @@ onMounted(() => {
          <template #right>
             <div class="flex items-center gap-4">
                <template v-if="authStore.isLoggedIn">
-                  <UPopover
-                     mode="hover"
-                     :ui="{ content: 'min-w-sm' }"
-                  >
+                  <UPopover :ui="{ content: 'min-w-sm' }">
                      <UChip
                         :text="cartStore.cart?.items?.length ?? 0"
                         :show="!!cartStore.cart?.items.length"
@@ -211,7 +228,10 @@ onMounted(() => {
                         </div>
                      </template>
                   </UPopover>
-                  <UDropdownMenu :items="userMenuItems">
+                  <UDropdownMenu
+                     :items="userMenuItems"
+                     class="hidden lg:flex"
+                  >
                      <div class="group flex items-center justify-between gap-2">
                         <UUser
                            :avatar="{
@@ -244,7 +264,7 @@ onMounted(() => {
 
          <template #body>
             <UNavigationMenu
-               :items="items"
+               :items="mergedMenuItems"
                orientation="vertical"
                class="-mx-2.5"
             />

@@ -46,12 +46,15 @@ async function onSubmit(data: InferFnSchema<typeof $authSchema, "login">) {
          <UCard>
             <template #header>
                <div class="text-center py-2">
-                  <h1
-                     class="bg-linear-to-r from-primary-500 to-indigo-500 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent dark:from-primary-400 dark:to-indigo-400"
-                  >
+                  <img
+                     src="/logo.svg"
+                     class="h-12 mx-auto w-auto mb-2"
+                     alt="Adhivas E-Commerce Logo"
+                  />
+                  <h1 class="text-primary text-2xl font-bold tracking-tight">
                      Adhivas E-Commerce
                   </h1>
-                  <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                  <p class="mt-2 text-sm text-muted">
                      Silakan masuk ke akun Anda untuk melanjutkan belanja
                   </p>
                </div>
