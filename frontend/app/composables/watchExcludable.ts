@@ -27,7 +27,7 @@ export default function <
 >(
    source: WatchSource<T>,
    cb: WatchCallback<T, MaybeUndefined<T, Immediate>>,
-   options?: WatchExcludableOptions<T, Immediate>,
+   options?: WatchExcludableOptions<T, Immediate>
 ) {
    /**
     * Filters the input object by removing any keys listed in `options.exclude`.
@@ -55,15 +55,15 @@ export default function <
       return next
    }
 
-   const { exclude, ...opts } = options || {}
+   const { exclude: _exclude, ...opts } = options || {}
 
    const unwatch = watch(
       () =>
          createFilteredObject(
-            typeof source == "function" ? source() : source.value,
+            typeof source == "function" ? source() : source.value
          ),
       cb,
-      { ...opts },
+      { ...opts }
    )
 
    onBeforeUnmount(() => unwatch())

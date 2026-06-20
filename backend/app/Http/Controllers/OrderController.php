@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Carbon;
 
 class OrderController extends Controller
 {
@@ -26,8 +27,22 @@ class OrderController extends Controller
 
         $orders = Order::when($user->role === UserRoleEnum::CUSTOMER, function ($query) use ($user) {
             return $query->where('user_id', $user->id);
+        }, function ($query) use ($request) {
+            return $query->when($request->user_id, function ($q, $userId) {
+                return $q->where('user_id', $userId);
+            });
         })
+            ->when($request->status, function ($query, $status) {
+                return $query->where('status', $status);
+            })
+            ->when($request->start_date, function ($query, $startDate) {
+                return $query->where('order_date', '>=', Carbon::parse($startDate)->startOfDay());
+            })
+            ->when($request->end_date, function ($query, $endDate) {
+                return $query->where('order_date', '<=', Carbon::parse($endDate)->endOfDay());
+            })
             ->with(['user'])
+            ->orderBy('order_date', $request->input('sort_dir', 'desc') === 'asc' ? 'asc' : 'desc')
             ->paginate($request->per_page);
 
         return $this->response(new OrderCollection($orders), 'Orders retrieved successfully');
