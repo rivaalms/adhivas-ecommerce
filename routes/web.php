@@ -4,6 +4,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'Welcome')->name('home');
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::inertia('dashboard', 'Dashboard')->name('dashboard');
+Route::middleware(['auth:web'])->group(function () {
+    Route::inertia('test', 'Welcome')->name('auth');
 });

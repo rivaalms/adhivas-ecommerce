@@ -39,7 +39,7 @@ return [
 
     'guards' => [
         'web' => [
-            'driver' => 'session',
+            'driver' => 'jwt_cookie',
             'provider' => 'users',
         ],
         'api' => [
