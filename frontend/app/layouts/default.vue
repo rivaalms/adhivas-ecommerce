@@ -7,16 +7,12 @@ const cartStore = useCartStore()
 
 const items = computed<NavigationMenuItem[]>(() => [
    {
-      label: "Home",
+      label: "Beranda",
       to: "/",
    },
    {
-      label: "Form Handling",
-      to: "/form-handling",
-   },
-   {
-      label: "Modal Form",
-      to: "/modal-form",
+      label: "Produk",
+      to: "/products",
    },
 ])
 

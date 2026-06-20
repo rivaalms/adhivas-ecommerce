@@ -3,11 +3,15 @@ const appStore = useAppStore()
 const authStore = useAuthStore()
 const cartStore = useCartStore()
 
+const productQuery = reactive({
+   per_page: 7 as const,
+   category_id: null as number | null,
+})
+
 const { data: products } = useApi(`/api/products`, {
    method: "get",
-   query: {
-      per_page: 5,
-   },
+   query: productQuery,
+   watch: [() => productQuery.category_id],
    transform: (res) =>
       res.data.data.map((item) => ({ ...item, add_to_cart_qty: 1 })),
    deep: true,
@@ -20,6 +24,15 @@ const { data: categories } = useApi(`/api/categories`, {
    },
    transform: (res) => res.data.data,
 })
+
+function onCategorySelected(category: CategoryDTO) {
+   if (productQuery.category_id == category.id) {
+      productQuery.category_id = null
+      return
+   }
+
+   productQuery.category_id = category.id
+}
 
 async function addToCart(product: ProductDTO & { add_to_cart_qty: number }) {
    const response = await cartStore.addCartItem({
@@ -50,26 +63,38 @@ async function addToCart(product: ProductDTO & { add_to_cart_qty: number }) {
             }"
          />
          <div class="flex flex-col gap-4">
-            <h2 class="text-2xl font-bold text-highlighted tracking-wide">
-               Kategori
-            </h2>
-            <div class="flex items-center gap-6 overflow-x-auto p-0.5">
-               <UPageCard
-                  v-for="category in categories"
-                  :key="category.id"
-                  :title="category.name"
-                  :ui="{
-                     root: 'shrink-0 w-full max-w-2xs',
-                     title: 'text-base font-medium line-clamp-2',
-                  }"
+            <div class="flex items-center">
+               <h2 class="text-2xl font-bold text-highlighted tracking-wide">
+                  Produk
+               </h2>
+               <UButton
+                  variant="link"
+                  label="Lihat Semua"
+                  trailing-icon="lucide:arrow-right"
+                  to="/products"
+                  class="ms-auto"
                />
             </div>
-         </div>
-         <div class="flex flex-col gap-4">
-            <h2 class="text-2xl font-bold text-highlighted tracking-wide">
-               Produk
-            </h2>
-            <div class="flex items-center gap-6 overflow-x-auto p-0.5">
+            <div class="flex items-center gap-2 overflow-x-auto p-0.5">
+               <UButton
+                  v-for="category in categories"
+                  :key="category.id"
+                  :label="category.name"
+                  :variant="
+                     productQuery.category_id == category.id ? 'soft' : 'ghost'
+                  "
+                  :color="
+                     productQuery.category_id == category.id
+                        ? 'primary'
+                        : 'neutral'
+                  "
+                  @click="onCategorySelected(category)"
+               />
+            </div>
+            <div
+               v-if="!!products?.length"
+               class="flex items-center gap-6 overflow-x-auto p-0.5"
+            >
                <UPageCard
                   v-for="product in products"
                   :key="product.id"
@@ -128,6 +153,13 @@ async function addToCart(product: ProductDTO & { add_to_cart_qty: number }) {
                   </div>
                </UPageCard>
             </div>
+            <UEmpty
+               v-else
+               icon="lucide:shopping-bag"
+               title="Tidak ada produk"
+               description="Pilih kategori lainnya untuk melihat produk yang tersedia."
+               variant="subtle"
+            />
          </div>
       </UPageBody>
    </UPage>

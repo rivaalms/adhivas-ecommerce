@@ -2,6 +2,9 @@ import { defineAppConfig } from "#imports"
 
 export default defineAppConfig({
    ui: {
+      colors: {
+         primary: "indigo",
+      },
       pageHeader: {
          slots: {
             root: "pt-0 border-b-0",
