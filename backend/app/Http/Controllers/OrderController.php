@@ -174,14 +174,20 @@ class OrderController extends Controller
             }
 
             $validated = $request->validate([
-                'status' => ['required', 'string', 'in:cancelled'],
+                'status' => ['required', 'string', 'in:cancelled,delivered'],
             ]);
 
-            if ($order->status !== OrderStatusEnum::PENDING) {
-                return $this->response(null, 'Only pending orders can be cancelled', 422);
-            }
+            $newStatus = OrderStatusEnum::from($validated['status']);
 
-            $newStatus = OrderStatusEnum::CANCELLED;
+            if ($newStatus === OrderStatusEnum::CANCELLED) {
+                if ($order->status !== OrderStatusEnum::PENDING) {
+                    return $this->response(null, 'Only pending orders can be cancelled', 422);
+                }
+            } elseif ($newStatus === OrderStatusEnum::DELIVERED) {
+                if ($order->status !== OrderStatusEnum::SHIPPED) {
+                    return $this->response(null, 'Only shipped orders can be marked as delivered', 422);
+                }
+            }
         } else {
             $validated = $request->validate([
                 'status' => ['required', 'string', 'in:' . implode(',', array_column(OrderStatusEnum::cases(), 'value'))],

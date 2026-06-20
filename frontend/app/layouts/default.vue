@@ -21,7 +21,14 @@ const items = computed<NavigationMenuItem[]>(() => [
 ])
 
 const userMenuItems = computed<DropdownMenuItem[][]>(() => [
-   [{ label: "Profile", icon: "lucide:user" }],
+   [
+      { label: "Profile", icon: "lucide:user" },
+      {
+         label: "Pesanan Saya",
+         icon: "lucide:shopping-bag",
+         onSelect: () => navigateTo("/orders"),
+      },
+   ],
    [
       {
          label: "Logout",
