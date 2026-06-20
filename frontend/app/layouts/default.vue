@@ -87,7 +87,7 @@ onMounted(() => {
 </script>
 
 <template>
-   <div class="bg-muted">
+   <div class="bg-muted dark:bg-default">
       <UHeader
          title="Adhivas E-Commerce"
          to="/"
@@ -115,6 +115,7 @@ onMounted(() => {
 
          <template #right>
             <div class="flex items-center gap-4">
+               <UColorModeButton />
                <template v-if="authStore.isLoggedIn">
                   <UPopover :ui="{ content: 'min-w-sm' }">
                      <UChip
@@ -255,7 +256,6 @@ onMounted(() => {
                      to="/login"
                      color="primary"
                      variant="solid"
-                     size="sm"
                      label="Login"
                   />
                </template>

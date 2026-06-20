@@ -41,7 +41,7 @@ async function onSubmit(data: InferFnSchema<typeof $authSchema, "login">) {
 </script>
 
 <template>
-   <div class="flex items-center h-screen justify-center">
+   <main class="flex items-center h-screen justify-center">
       <div class="w-full max-w-md">
          <UCard>
             <template #header>
@@ -85,5 +85,5 @@ async function onSubmit(data: InferFnSchema<typeof $authSchema, "login">) {
             </template>
          </UCard>
       </div>
-   </div>
+   </main>
 </template>

@@ -97,6 +97,10 @@ const navigationItem = [
                   </UTooltip>
                </template>
                <template #right>
+                  <UColorModeButton
+                     class="me-2"
+                     square
+                  />
                   <UDropdownMenu :items="userMenuItems">
                      <div class="group flex items-center justify-between gap-2">
                         <UUser
