@@ -5,17 +5,11 @@ import { z } from "zod"
  */
 export function $categorySchema() {
    const create = z.object({
-      name: z
-         .string()
-         .min(1, "Nama kategori wajib diisi")
-         .max(255, "Nama kategori maksimal 255 karakter"),
+      name: z.string().nonempty(),
    })
 
    const update = z.object({
-      name: z
-         .string()
-         .min(1, "Nama kategori wajib diisi")
-         .max(255, "Nama kategori maksimal 255 karakter"),
+      name: z.string().nonempty(),
    })
 
    return { create, update }

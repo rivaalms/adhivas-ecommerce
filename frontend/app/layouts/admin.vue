@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { DropdownMenuItem } from "@nuxt/ui"
+import type { DropdownMenuItem, NavigationMenuItem } from "@nuxt/ui"
 
 const authStore = useAuthStore()
 const appStore = useAppStore()
@@ -25,6 +25,21 @@ const userMenuItems = computed<DropdownMenuItem[][]>(() => [
       },
    ],
 ])
+
+const navigationItem = [
+   [
+      {
+         label: "Dashboard",
+         to: "/admin",
+         icon: "lucide:home",
+      },
+      {
+         label: "Kategori Produk",
+         to: "/admin/categories",
+         icon: "lucide:layers",
+      },
+   ],
+] satisfies NavigationMenuItem[][]
 </script>
 
 <template>
@@ -48,16 +63,9 @@ const userMenuItems = computed<DropdownMenuItem[][]>(() => [
          </template>
          <template #default="{ collapsed }">
             <UNavigationMenu
-               :items="[]"
+               :items="navigationItem"
                :collapsed="collapsed"
                orientation="vertical"
-            />
-            <UNavigationMenu
-               :items="[]"
-               :collapsed="collapsed"
-               popover
-               orientation="vertical"
-               class="mt-auto"
             />
          </template>
       </UDashboardSidebar>
