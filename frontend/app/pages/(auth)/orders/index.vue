@@ -55,7 +55,7 @@ const columns: TableColumn<OrderDTO>[] = [
          $formatNumber(row.original.total_amount, {
             style: "currency",
             currency: "IDR",
-            maximumFractionDigits: 0,
+            currencyDisplay: "narrowSymbol",
          }),
    },
    {
