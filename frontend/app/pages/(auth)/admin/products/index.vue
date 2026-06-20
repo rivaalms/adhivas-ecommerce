@@ -12,6 +12,31 @@ const appStore = useAppStore()
 const query = reactive({
    page: 1,
    per_page: 10,
+   search: undefined as string | undefined,
+   category_id: undefined as number | undefined,
+   sort_by: undefined as string | undefined,
+   sort_dir: undefined as string | undefined,
+})
+
+const sorting = ref<ColumnSorting[]>([])
+
+const categorySearch = shallowRef("")
+const { data: categories, refresh: fetchCategories } = useApi(
+   "/api/categories",
+   {
+      method: "get",
+      query: {
+         search: categorySearch,
+         per_page: 10,
+      },
+      transform: (res) => res.data.data,
+      default: () => [] as CategoryDTO[],
+   }
+)
+
+watchDebounced(categorySearch, () => fetchCategories(), {
+   debounce: 800,
+   maxWait: 1000,
 })
 
 const { data, pending, refresh } = useApi(`/api/products`, {
@@ -20,9 +45,47 @@ const { data, pending, refresh } = useApi(`/api/products`, {
    transform: (res) => res.data,
 })
 
-watchDeep(
+watch(
+   () => sorting.value,
+   (newSorting) => {
+      if (newSorting && newSorting.length > 0) {
+         query.sort_by = newSorting[0]!.id
+         query.sort_dir = newSorting[0]!.desc ? "desc" : "asc"
+      } else {
+         query.sort_by = undefined
+         query.sort_dir = undefined
+      }
+      query.page = 1
+   },
+   { deep: true }
+)
+
+watchDebounced(
+   () => query.search,
+   () => {
+      query.page = 1
+      refresh()
+   },
+   {
+      debounce: 800,
+      maxWait: 1000,
+   }
+)
+
+watch(
+   () => query.category_id,
+   () => {
+      query.page = 1
+      refresh()
+   }
+)
+
+watchExcludable(
    () => query,
-   () => refresh()
+   () => refresh(),
+   {
+      exclude: ["search", "category_id"],
+   }
 )
 
 const columns: TableColumn<ProductDTO>[] = [
@@ -32,12 +95,28 @@ const columns: TableColumn<ProductDTO>[] = [
    },
    {
       accessorKey: "price",
-      header: "Harga",
+      header: ({ column }) => {
+         const isSorted = column.getIsSorted()
+         return h(UButton, {
+            color: "neutral",
+            variant: "ghost",
+            label: "Harga",
+            icon: isSorted
+               ? isSorted === "desc"
+                  ? "lucide:arrow-down-narrow-wide"
+                  : "lucide:arrow-up-narrow-wide"
+               : "lucide:arrow-up-down",
+            onClick: () =>
+               column.getIsSorted() == "desc"
+                  ? column.clearSorting()
+                  : column.toggleSorting(column.getIsSorted() === "asc"),
+         })
+      },
       cell: ({ row }) =>
          $formatNumber(row.original.price, {
             style: "currency",
             currency: "IDR",
-            maximumFractionDigits: 0,
+            currencyDisplay: "narrowSymbol",
          }),
    },
    {
@@ -46,7 +125,23 @@ const columns: TableColumn<ProductDTO>[] = [
    },
    {
       accessorKey: "created_at",
-      header: "Dibuat Pada",
+      header: ({ column }) => {
+         const isSorted = column.getIsSorted()
+         return h(UButton, {
+            color: "neutral",
+            variant: "ghost",
+            label: "Dibuat Pada",
+            icon: isSorted
+               ? isSorted === "desc"
+                  ? "lucide:arrow-down-narrow-wide"
+                  : "lucide:arrow-up-narrow-wide"
+               : "lucide:arrow-up-down",
+            onClick: () =>
+               column.getIsSorted() == "desc"
+                  ? column.clearSorting()
+                  : column.toggleSorting(column.getIsSorted() === "asc"),
+         })
+      },
       cell: ({ row }) => $formatDate(row.original.created_at),
    },
    {
@@ -167,17 +262,39 @@ function openForm(data?: ProductDTO) {
       <DataTable
          v-model:page="query.page"
          v-model:per-page="query.per_page"
+         v-model:sorting="sorting"
          :data="data?.data"
          :columns="columns"
          :total="data?.meta.total"
          :loading="pending"
       >
          <template #header>
-            <div class="flex items-center gap-2">
+            <div
+               class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between w-full"
+            >
+               <div class="flex flex-wrap items-center gap-2.5">
+                  <UInput
+                     v-model="query.search"
+                     placeholder="Cari produk..."
+                     icon="lucide:search"
+                     class="w-64"
+                  />
+                  <USelectMenu
+                     v-model="query.category_id"
+                     v-model:search-term="categorySearch"
+                     :items="categories"
+                     value-key="id"
+                     label-key="name"
+                     placeholder="Pilih Kategori"
+                     ignore-filter
+                     clear
+                     class="w-48"
+                  />
+               </div>
                <UButton
                   label="Produk Baru"
                   icon="lucide:plus"
-                  class="ms-auto"
+                  class="shrink-0 sm:ms-auto"
                   @click="() => openForm()"
                />
             </div>

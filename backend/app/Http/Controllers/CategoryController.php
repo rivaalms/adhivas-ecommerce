@@ -18,7 +18,10 @@ class CategoryController extends Controller
      */
     public function index(Request $request)
     {
-        $categories = Category::paginate($request->per_page);
+        $categories = Category::when($request->search ?? $request->name, function ($query, $search) {
+                return $query->where('name', 'ilike', "%{$search}%");
+            })
+            ->paginate($request->input('per_page', 10));
         return $this->response(new CategoryCollection($categories), 'Categories retrieved successfully');
     }
 

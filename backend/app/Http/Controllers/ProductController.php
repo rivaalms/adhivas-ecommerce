@@ -11,12 +11,29 @@ use Illuminate\Support\Facades\Gate;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
-        $products = Product::with(['categories'])->paginate($request->per_page);
+        $products = Product::with(['categories'])
+            ->when($request->category_id, function ($query, $categoryId) {
+                return $query->whereHas('categories', function ($q) use ($categoryId) {
+                    $q->where('categories.id', $categoryId);
+                });
+            })
+            ->when($request->search ?? $request->name, function ($query, $search) {
+                return $query->where('name', 'ilike', "%{$search}%");
+            })
+            ->when($request->sort_by, function ($query, $sortBy) use ($request) {
+                $allowedFields = ['price', 'created_at'];
+                if (in_array($sortBy, $allowedFields)) {
+                    $sortDir = $request->input('sort_dir', 'asc') === 'desc' ? 'desc' : 'asc';
+                    return $query->orderBy($sortBy, $sortDir);
+                }
+                return $query;
+            }, function ($query) {
+                return $query->orderBy('created_at', 'desc');
+            })
+            ->paginate($request->per_page);
+
         return $this->response(new ProductCollection($products), 'Products retrieved successfully');
     }
 

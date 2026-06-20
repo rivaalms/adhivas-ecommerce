@@ -24,6 +24,10 @@ const expanded = defineModel<Record<number, boolean> | undefined>("expanded", {
    required: false,
    default: undefined,
 })
+const sorting = defineModel<ColumnSorting[]>("sorting", {
+   required: false,
+   default: () => [],
+})
 
 const showCountInfo = computed(() => {
    return props.from !== undefined && props.to !== undefined
@@ -35,6 +39,7 @@ const showCountInfo = computed(() => {
       <slot name="header" />
       <UTable
          v-model:expanded="expanded"
+         v-model:sorting="sorting"
          :data="props.data"
          :columns="props.columns"
          class="w-full"

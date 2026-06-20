@@ -88,3 +88,8 @@ declare type InferSchema<
 > = import("zod").infer<S>
 
 declare type HintedString<S extends string> = S | (string & {})
+
+declare type ColumnSorting = {
+   desc: boolean
+   id: string
+}
