@@ -33,9 +33,12 @@ class ProductController extends Controller
             'price' => ['required', 'numeric', 'min:0'],
             'stock_quantity' => ['required', 'integer', 'min:0'],
             'image_url' => ['nullable', 'string', 'url', 'max:255'],
+            'categories' => ['required', 'array', 'min:1'],
+            'categories.*' => ['required', 'integer', 'exists:categories,id'],
         ]);
 
         $product = Product::create($validated);
+        $product->categories()->attach($validated['categories']);
 
         return $this->response(new ProductResource($product), 'Product created successfully', 201);
     }
@@ -45,7 +48,7 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        $product = Product::find($id);
+        $product = Product::with(['categories'])->find($id);
 
         if (!$product) {
             return $this->response(null, 'Product not found', 404);
@@ -73,9 +76,15 @@ class ProductController extends Controller
             'price' => ['sometimes', 'required', 'numeric', 'min:0'],
             'stock_quantity' => ['sometimes', 'required', 'integer', 'min:0'],
             'image_url' => ['nullable', 'string', 'url', 'max:255'],
+            'categories' => ['sometimes', 'required', 'array', 'min:1'],
+            'categories.*' => ['required', 'integer', 'exists:categories,id'],
         ]);
 
         $product->update($validated);
+
+        if (isset($validated['categories'])) {
+            $product->categories()->sync($validated['categories']);
+        }
 
         return $this->response(new ProductResource($product), 'Product updated successfully');
     }
@@ -93,6 +102,7 @@ class ProductController extends Controller
             return $this->response(null, 'Product not found', 404);
         }
 
+        $product->categories()->detach();
         $product->delete();
 
         return $this->response(null, 'Product deleted successfully');
