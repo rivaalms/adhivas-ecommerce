@@ -15,10 +15,11 @@ interface ApiResponse<T> {
  * change this interface accordingly
  */
 interface Pagination<T> {
-   page: number
-   per_page: number
-   data: T[]
-   from: number
-   to: number
-   total: number
+   data: T extends Array<unknown> ? T : T[]
+   meta: {
+      page: number
+      per_page: number
+      last_page: number
+      total: number
+   }
 }

@@ -49,20 +49,9 @@ export default function (event: H3Event) {
          throw createError({
             status: response.status,
             statusText: response.statusText,
-            message: isApiResponse(data) ? data.error : data.message,
+            message: data.message,
             data: data,
          })
       },
    })
-}
-
-/**
- * @internal
- *
- * Alter this when ApiResponse interface changed
- *
- * @reference ~~/shared/types/api.d.ts
- */
-function isApiResponse(input: unknown): input is ApiResponse<any> {
-   return typeof input === "object" && input !== null && "success" in input
 }

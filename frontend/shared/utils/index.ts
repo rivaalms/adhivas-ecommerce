@@ -7,3 +7,4 @@
  */
 
 export { $authSchema } from "./validations/auth"
+export { $categorySchema } from "./validations/category"
