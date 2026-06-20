@@ -43,6 +43,11 @@ const navigationItem = [
          to: "/admin/products",
          icon: "lucide:shopping-bag",
       },
+      {
+         label: "Daftar Order",
+         to: "/admin/orders",
+         icon: "lucide:shopping-cart",
+      },
    ],
 ] satisfies NavigationMenuItem[][]
 </script>
