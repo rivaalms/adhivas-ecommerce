@@ -3,6 +3,7 @@ import type { DropdownMenuItem, TableColumn } from "@nuxt/ui"
 import {
    ConfirmationPrompt,
    FormProduct,
+   FormProductImage,
    UButton,
    UDropdownMenu,
 } from "#components"
@@ -169,6 +170,11 @@ const columns: TableColumn<ProductDTO>[] = [
                         onSelect: () => openForm(row.original),
                      },
                      {
+                        label: "Upload Gambar",
+                        icon: "lucide:image",
+                        onSelect: () => openImageUploadForm(row.original),
+                     },
+                     {
                         label: "Hapus",
                         icon: "lucide:trash",
                         color: "error",
@@ -248,7 +254,53 @@ function openForm(data?: ProductDTO) {
                formLoading.value = false
             }
          },
-      })
+      }),
+      {
+         width: "2xl",
+      }
+   )
+}
+
+const imageFormLoading = shallowRef(false)
+function openImageUploadForm(productData: ProductDTO) {
+   appStore.openModal(
+      "Upload Gambar Produk",
+      h(FormProductImage, {
+         imageUrl: productData.image_url,
+         loading: imageFormLoading,
+         onSubmit: async (file: File) => {
+            imageFormLoading.value = true
+            try {
+               const formData = new FormData()
+               formData.append("image", file)
+
+               const response = await $api(
+                  `/api/products/${productData.id}/image`,
+                  {
+                     method: "post",
+                     body: formData,
+                  }
+               )
+
+               appStore.notify({
+                  title: "Berhasil",
+                  description:
+                     response.message || "Gambar produk berhasil diperbarui",
+                  color: "success",
+               })
+
+               refresh()
+               appStore.closeModal()
+            } catch (e) {
+               $notifyError(e)
+            } finally {
+               imageFormLoading.value = false
+            }
+         },
+      }),
+      {
+         width: "md",
+      }
    )
 }
 </script>

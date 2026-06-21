@@ -26,7 +26,6 @@ const state = reactive<DeepPartial<InferSchema<typeof schema>>>({
    description: undefined,
    price: undefined,
    stock_quantity: undefined,
-   image_url: undefined,
    categories: [],
 })
 
@@ -54,7 +53,6 @@ watchImmediate(
       state.description = value?.description ?? undefined
       state.price = value?.price ?? undefined
       state.stock_quantity = value?.stock_quantity ?? undefined
-      state.image_url = value?.image_url ?? undefined
       state.categories = value?.categories?.map((c) => c.id) ?? []
    }
 )
@@ -132,19 +130,6 @@ watchImmediate(
             />
          </UFormField>
       </div>
-
-      <UFormField
-         name="image_url"
-         label="URL Gambar Produk"
-      >
-         <UInput
-            v-model.nullable="state.image_url"
-            type="url"
-            :disabled="loading"
-            class="w-full"
-            placeholder="https://example.com/image.jpg"
-         />
-      </UFormField>
 
       <UFormField
          name="categories"

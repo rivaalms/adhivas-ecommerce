@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { ConfirmationPrompt, FormProduct, UButton } from "#components"
+import {
+   ConfirmationPrompt,
+   FormProduct,
+   FormProductImage,
+   UButton,
+} from "#components"
 
 const route = useRoute()
 const router = useRouter()
@@ -31,6 +36,7 @@ const stockStatus = computed(() => {
 })
 
 const formLoading = shallowRef(false)
+const imageFormLoading = shallowRef(false)
 
 function openEditForm() {
    if (!product.value) return
@@ -59,6 +65,46 @@ function openEditForm() {
             }
          },
       })
+   )
+}
+
+function openImageUploadForm() {
+   if (!product.value) return
+   appStore.openModal(
+      "Upload Gambar Produk",
+      h(FormProductImage, {
+         imageUrl: product.value.image_url,
+         loading: imageFormLoading,
+         onSubmit: async (file: File) => {
+            imageFormLoading.value = true
+            try {
+               const formData = new FormData()
+               formData.append("image", file)
+
+               const response = await $api(`/api/products/${id}/image`, {
+                  method: "post",
+                  body: formData,
+               })
+
+               appStore.notify({
+                  title: "Berhasil",
+                  description:
+                     response.message || "Gambar produk berhasil diperbarui",
+                  color: "success",
+               })
+
+               refresh()
+               appStore.closeModal()
+            } catch (e) {
+               $notifyError(e)
+            } finally {
+               imageFormLoading.value = false
+            }
+         },
+      }),
+      {
+         width: "md",
+      }
    )
 }
 
@@ -150,7 +196,7 @@ function confirmDelete() {
          class="grid grid-cols-1 gap-6 lg:grid-cols-3 items-start"
       >
          <!-- Left Column: Product Image -->
-         <div class="lg:col-span-1">
+         <div class="lg:col-span-1 flex flex-col gap-4">
             <div
                class="aspect-square w-full rounded-md bg-muted flex items-center justify-center overflow-hidden border border-muted border-dashed"
             >
@@ -167,6 +213,14 @@ function confirmDelete() {
                   variant="naked"
                />
             </div>
+            <UButton
+               label="Ubah Gambar"
+               icon="lucide:image"
+               color="neutral"
+               variant="outline"
+               class="w-full justify-center"
+               @click="openImageUploadForm"
+            />
          </div>
 
          <!-- Right Column: Detail Information -->
