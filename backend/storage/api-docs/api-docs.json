@@ -3253,12 +3253,237 @@
     },
     "components": {
         "schemas": {
+            "OrderStatusEnum": {
+                "type": "string",
+                "enum": [
+                    "pending",
+                    "processing",
+                    "shipped",
+                    "delivered",
+                    "completed",
+                    "cancelled"
+                ]
+            },
             "UserRoleEnum": {
                 "type": "string",
                 "enum": [
                     "admin",
                     "customer"
                 ]
+            },
+            "Cart": {
+                "required": [
+                    "id",
+                    "user_id"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "user_id": {
+                        "type": "integer",
+                        "example": 1
+                    }
+                },
+                "type": "object"
+            },
+            "CartItem": {
+                "required": [
+                    "id",
+                    "cart_id",
+                    "product_id",
+                    "quantity"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "cart_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "product_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "quantity": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Category": {
+                "required": [
+                    "id",
+                    "name",
+                    "slug"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Electronics"
+                    },
+                    "slug": {
+                        "type": "string",
+                        "example": "electronics"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Order": {
+                "required": [
+                    "id",
+                    "user_id",
+                    "user_address_id",
+                    "order_date",
+                    "total_amount",
+                    "status"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "user_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "user_address_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "order_date": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "total_amount": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 500
+                    },
+                    "status": {
+                        "$ref": "#/components/schemas/OrderStatusEnum"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "OrderDetail": {
+                "required": [
+                    "id",
+                    "order_id",
+                    "product_id",
+                    "quantity",
+                    "price"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "order_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "product_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "quantity": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 50
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Product": {
+                "required": [
+                    "id",
+                    "name",
+                    "description",
+                    "price",
+                    "stock_quantity"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Smartphone"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "High-end smartphone"
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 999.99
+                    },
+                    "stock_quantity": {
+                        "type": "integer",
+                        "example": 50
+                    },
+                    "image_url": {
+                        "type": "string",
+                        "example": "http://localhost:8000/storage/products/image.jpg",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
             },
             "User": {
                 "required": [
@@ -3290,6 +3515,85 @@
                     "updated_at": {
                         "type": "string",
                         "example": "2022-01-01T00:00:00.000000Z"
+                    }
+                },
+                "type": "object"
+            },
+            "UserAddress": {
+                "required": [
+                    "id",
+                    "user_id",
+                    "subdistrict_id",
+                    "subdistrict_name",
+                    "district_id",
+                    "district_name",
+                    "regency_id",
+                    "regency_name",
+                    "province_id",
+                    "province_name",
+                    "postal_code"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "user_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "address_line": {
+                        "type": "string",
+                        "example": "Jl. Merdeka No. 1",
+                        "nullable": true
+                    },
+                    "subdistrict_id": {
+                        "type": "string",
+                        "example": "11"
+                    },
+                    "subdistrict_name": {
+                        "type": "string",
+                        "example": "Menteng"
+                    },
+                    "district_id": {
+                        "type": "string",
+                        "example": "1"
+                    },
+                    "district_name": {
+                        "type": "string",
+                        "example": "Jakarta Pusat"
+                    },
+                    "regency_id": {
+                        "type": "string",
+                        "example": "31"
+                    },
+                    "regency_name": {
+                        "type": "string",
+                        "example": "DKI Jakarta"
+                    },
+                    "province_id": {
+                        "type": "string",
+                        "example": "31"
+                    },
+                    "province_name": {
+                        "type": "string",
+                        "example": "DKI Jakarta"
+                    },
+                    "postal_code": {
+                        "type": "string",
+                        "example": "10310"
+                    },
+                    "is_default": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 },
                 "type": "object"

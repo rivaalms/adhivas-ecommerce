@@ -2,6 +2,9 @@
 
 namespace App\Enums\Enum;
 
+use OpenApi\Attributes as OA;
+
+#[OA\Schema(type: 'string')]
 enum OrderStatusEnum: string
 {
     case PENDING = 'pending';

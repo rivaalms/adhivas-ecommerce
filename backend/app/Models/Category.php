@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
+use OpenApi\Attributes as OA;
+
 /**
  * @property int $id
  * @property string $name
@@ -15,6 +17,18 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
+#[OA\Schema(
+    schema: 'Category',
+    type: 'object',
+    required: ['id', 'name', 'slug'],
+    properties: [
+        new OA\Property(property: 'id', type: 'integer', example: 1),
+        new OA\Property(property: 'name', type: 'string', example: 'Electronics'),
+        new OA\Property(property: 'slug', type: 'string', example: 'electronics'),
+        new OA\Property(property: 'created_at', type: 'string', format: 'date-time'),
+        new OA\Property(property: 'updated_at', type: 'string', format: 'date-time'),
+    ]
+)]
 #[Fillable(['name', 'slug'])]
 class Category extends Model
 {
