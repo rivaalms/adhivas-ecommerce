@@ -78,7 +78,7 @@ Jika Anda ingin menjalankan frontend dan backend secara manual tanpa Docker, iku
 2. Jalankan instalasi modul node dan konfigurasi env:
    ```bash
    pnpm install
-   cp .env.example .env # Pastikan API_URL mengarah ke backend (http://localhost:8000)
+   cp .env.example .env # Pastikan API_URL mengarah ke backend (http://localhost:8000/api)
    ```
 3. Jalankan server development:
    ```bash

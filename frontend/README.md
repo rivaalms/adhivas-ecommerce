@@ -65,7 +65,7 @@ cp .env.example .env
 Isi konfigurasi dalam berkas `.env`:
 ```env
 # URL Laravel Backend API
-API_URL=http://localhost:8000
+API_URL=http://localhost:8000/api
 ```
 
 ### 4. Menjalankan Server Development
