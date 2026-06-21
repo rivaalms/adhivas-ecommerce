@@ -1,0 +1,65 @@
+services:
+  # Database Service (PostgreSQL)
+  database:
+    image: postgres:15-alpine
+    container_name: adhivas-db
+    environment:
+      POSTGRES_DB: adhivas_ecommerce
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d adhivas_ecommerce"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Backend Service (Laravel API)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: adhivas-backend
+    restart: always
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      APP_NAME: "Adhivas E-Commerce"
+      APP_ENV: local
+      APP_DEBUG: "false"
+      APP_URL: http://localhost:8000
+      DB_CONNECTION: pgsql
+      DB_HOST: database
+      DB_PORT: 5432
+      DB_DATABASE: adhivas_ecommerce
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      APP_KEY: ${APP_KEY}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_ALGO: HS256
+    ports:
+      - "8000:8000"
+
+  # Frontend Service (Nuxt App)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: adhivas-frontend
+    restart: always
+    depends_on:
+      - backend
+    environment:
+      PORT: 3000
+      HOST: 0.0.0.0
+      NUXT_API_URL: http://backend:8000/api
+      API_URL: http://backend:8000/api
+    ports:
+      - "3000:3000"
+
+volumes:
+  pgdata:
