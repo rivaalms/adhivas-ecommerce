@@ -5,6 +5,8 @@ const authStore = useAuthStore()
 const appStore = useAppStore()
 const cartStore = useCartStore()
 
+const dayjs = useDayjs()
+
 const items = computed(
    () =>
       [
@@ -58,7 +60,10 @@ const userMenuItems = computed(
 )
 
 const mergedMenuItems = computed(() => {
-   return [items.value, ...userMenuItems.value] satisfies NavigationMenuItem[][]
+   return [
+      items.value,
+      ...(authStore.isLoggedIn ? userMenuItems.value : []),
+   ] satisfies NavigationMenuItem[][]
 })
 
 function selectAllCartItems() {
@@ -278,5 +283,16 @@ onMounted(() => {
             <slot />
          </UContainer>
       </UMain>
+
+      <USeparator />
+
+      <UFooter>
+         <template #left>
+            <p class="text-sm text-muted">
+               &copy; {{ dayjs().year() }} Adhivas E-Commerce. All rights
+               reserved.
+            </p>
+         </template>
+      </UFooter>
    </div>
 </template>

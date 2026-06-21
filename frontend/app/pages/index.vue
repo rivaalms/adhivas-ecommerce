@@ -58,7 +58,7 @@ async function addToCart(product: ProductDTO & { add_to_cart_qty: number }) {
       <UPageBody>
          <!-- Welcome Banner Section -->
          <UPageCard
-            :title="`Selamat datang, ${authStore.user?.full_name}`"
+            :title="`Selamat datang, ${authStore.user?.full_name ?? 'Pelanggan'}`"
             description="Belanja di Adhivas Ecommerce, produk dijamin original!"
             spotlight
             :ui="{
