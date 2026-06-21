@@ -1,37 +1,37 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="100%" height="100%">
   <!-- Stylized "A" Upper Body -->
-  <path 
-    d="M 430 150 L 570 150 L 770 560 L 680 540 L 260 625 Z M 500 280 L 370 510 L 600 470 Z" 
-    fill="#4f46e5" 
-    fill-rule="evenodd" 
+  <path
+    d="M 430 150 L 570 150 L 770 560 L 680 540 L 260 625 Z M 500 280 L 370 510 L 600 470 Z"
+    fill="#d946ef"
+    fill-rule="evenodd"
   />
 
   <!-- Stylized "A" Lower-Left Curved Leg -->
-  <path 
-    d="M 300 625 L 200 645 C 120 700 60 760 50 850 L 170 850 C 180 770 220 700 300 625 Z" 
-    fill="#4f46e5" 
+  <path
+    d="M 300 625 L 200 645 C 120 700 60 760 50 850 L 170 850 C 180 770 220 700 300 625 Z"
+    fill="#d946ef"
   />
 
   <!-- Shopping Cart Basket Frame -->
-  <path 
-    d="M 310 670 L 360 780 L 640 780 L 760 580 L 840 580" 
-    fill="none" 
-    stroke="#4f46e5" 
-    stroke-width="50" 
-    stroke-linecap="round" 
-    stroke-linejoin="round" 
+  <path
+    d="M 310 670 L 360 780 L 640 780 L 760 580 L 840 580"
+    fill="none"
+    stroke="#d946ef"
+    stroke-width="50"
+    stroke-linecap="round"
+    stroke-linejoin="round"
   />
 
   <!-- Shopping Cart Bottom Chassis Bar -->
-  <path 
-    d="M 400 840 L 640 840" 
-    fill="none" 
-    stroke="#4f46e5" 
-    stroke-width="40" 
-    stroke-linecap="round" 
+  <path
+    d="M 400 840 L 640 840"
+    fill="none"
+    stroke="#d946ef"
+    stroke-width="40"
+    stroke-linecap="round"
   />
 
   <!-- Shopping Cart Wheels -->
-  <circle cx="440" cy="915" r="40" fill="#4f46e5" />
-  <circle cx="600" cy="915" r="40" fill="#4f46e5" />
+  <circle cx="440" cy="915" r="40" fill="#d946ef" />
+  <circle cx="600" cy="915" r="40" fill="#d946ef" />
 </svg>

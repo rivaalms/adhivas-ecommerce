@@ -109,8 +109,9 @@ async function addToCart(product: ProductDTO & { add_to_cart_qty: number }) {
                         class="aspect-square w-full rounded-md overflow-hidden"
                      >
                         <img
-                           src="https://picsum.photos/seed/picsum/200/200"
+                           :src="product.image_url ?? undefined"
                            class="object-cover h-full w-full"
+                           :alt="product.name"
                         />
                      </div>
                      <div class="flex flex-col">
