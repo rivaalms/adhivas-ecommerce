@@ -82,7 +82,9 @@ function checkoutItems() {
 }
 
 onMounted(() => {
-   cartStore.fetchCart()
+   if (authStore.isLoggedIn) {
+      cartStore.fetchCart()
+   }
 })
 </script>
 

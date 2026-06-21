@@ -8,13 +8,21 @@ export default function (e: unknown) {
 
 /** @internal */
 function resolveErrorToast(e: unknown): Partial<Toast> {
-   const title = isNuxtError(e)
-      ? e.statusText
-      : isGeneralError(e)
-        ? e.name
-        : "Error"
+   const title =
+      typeof e === "object" &&
+      e !== null &&
+      "statusMessage" in e &&
+      typeof e.statusMessage === "string"
+         ? e.statusMessage
+         : isGeneralError(e)
+           ? e.name
+           : "Error"
+
    const description =
-      isNuxtError(e) || isGeneralError(e)
+      typeof e === "object" &&
+      e !== null &&
+      "message" in e &&
+      typeof e.message === "string"
          ? e.message
          : "An unexpected error occurred"
 

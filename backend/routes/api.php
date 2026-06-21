@@ -24,8 +24,8 @@ Route::middleware('auth:api')->group(function () {
     Route::get('dashboard/status-breakdown', [DashboardController::class, 'statusBreakdown']);
     Route::get('dashboard/sales-trend', [DashboardController::class, 'salesTrend']);
     Route::post('products/{id}/upload', [ProductController::class, 'uploadImage']);
-    Route::apiResource('products', ProductController::class);
-    Route::apiResource('categories', CategoryController::class);
+    Route::apiResource('products', ProductController::class)->withoutMiddlewareFor(['index', 'show'], 'auth:api');
+    Route::apiResource('categories', CategoryController::class)->withoutMiddlewareFor(['index', 'show'], 'auth:api');
     Route::apiResource('addresses', UserAddressController::class);
     Route::get('users', [UserController::class, 'index']);
     Route::get('users/{id}', [UserController::class, 'show']);

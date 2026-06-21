@@ -8,8 +8,6 @@ export default defineNuxtConfig({
 
    routeRules: {
       "/admin/**": { appLayout: "admin" },
-      "/login": { appLayout: false },
-      "/register": { appLayout: false },
    },
 
    modules: [

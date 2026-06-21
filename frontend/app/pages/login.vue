@@ -41,49 +41,55 @@ async function onSubmit(data: InferFnSchema<typeof $authSchema, "login">) {
 </script>
 
 <template>
-   <main class="flex items-center h-screen justify-center">
-      <div class="w-full max-w-md">
-         <UCard>
-            <template #header>
-               <div class="text-center py-2">
-                  <img
-                     src="/logo.svg"
-                     class="h-12 mx-auto w-auto mb-2"
-                     alt="Adhivas E-Commerce Logo"
-                  />
-                  <h1 class="text-primary text-2xl font-bold tracking-tight">
-                     Adhivas E-Commerce
-                  </h1>
-                  <p class="mt-2 text-sm text-muted">
-                     Silakan masuk ke akun Anda untuk melanjutkan belanja
-                  </p>
-               </div>
-            </template>
+   <UPage>
+      <UPageBody class="h-[calc(100vh-var(--ui-header-height))] mt-0">
+         <div class="flex items-center justify-center h-full">
+            <div class="w-full max-w-md">
+               <UCard>
+                  <template #header>
+                     <div class="text-center py-2">
+                        <img
+                           src="/logo.svg"
+                           class="h-12 mx-auto w-auto mb-2"
+                           alt="Adhivas E-Commerce Logo"
+                        />
+                        <h1
+                           class="text-primary text-2xl font-bold tracking-tight"
+                        >
+                           Adhivas E-Commerce
+                        </h1>
+                        <p class="mt-2 text-sm text-muted">
+                           Silakan masuk ke akun Anda untuk melanjutkan belanja
+                        </p>
+                     </div>
+                  </template>
 
-            <div class="py-4">
-               <FormAuth
-                  :loading="loading"
-                  @submit="onSubmit"
-               />
+                  <div class="py-4">
+                     <FormAuth
+                        :loading="loading"
+                        @submit="onSubmit"
+                     />
 
-               <div class="mt-6 text-center text-sm text-muted">
-                  Belum punya akun?
-                  <NuxtLink
-                     to="/register"
-                     class="text-primary hover:underline"
-                  >
-                     Daftar sekarang
-                  </NuxtLink>
-               </div>
+                     <div class="mt-6 text-center text-sm text-muted">
+                        Belum punya akun?
+                        <NuxtLink
+                           to="/register"
+                           class="text-primary hover:underline"
+                        >
+                           Daftar sekarang
+                        </NuxtLink>
+                     </div>
+                  </div>
+
+                  <template #footer>
+                     <div class="text-center text-xs text-muted">
+                        &copy; {{ dayjs().year() }} Adhivas E-Commerce. All
+                        rights reserved.
+                     </div>
+                  </template>
+               </UCard>
             </div>
-
-            <template #footer>
-               <div class="text-center text-xs text-muted">
-                  &copy; {{ dayjs().year() }} Adhivas E-Commerce. All rights
-                  reserved.
-               </div>
-            </template>
-         </UCard>
-      </div>
-   </main>
+         </div>
+      </UPageBody>
+   </UPage>
 </template>

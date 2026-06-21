@@ -1,7 +1,7 @@
 export default defineNuxtRouteMiddleware((to) => {
    const authStore = useAuthStore()
 
-   // Check if the route is inside the (auth) route group
+   // Check if the route is inside the (auth) route group and doesn't explicitly disable auth
    const isProtectedRoute = to.meta.groups?.includes("auth")
 
    const isLoginPage = to.path === "/login"

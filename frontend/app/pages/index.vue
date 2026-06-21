@@ -35,6 +35,10 @@ function onCategorySelected(category: CategoryDTO) {
 }
 
 async function addToCart(product: ProductDTO & { add_to_cart_qty: number }) {
+   if (!authStore.isLoggedIn) {
+      return navigateTo("/login")
+   }
+
    const response = await cartStore.addCartItem({
       product_id: product.id,
       quantity: product.add_to_cart_qty,
