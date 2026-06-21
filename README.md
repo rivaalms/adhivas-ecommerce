@@ -99,6 +99,13 @@ Gunakan kredensial akun bawaan berikut untuk menguji coba autentikasi sistem:
 
 ---
 
+## 📚 Dokumentasi API
+
+Anda dapat mengakses dokumentasi API pada endpoint berikut di Backend:
+
+- [Swagger UI](#) (`/api/documentation`)
+- [OpenAPI Specification](#) (`/docs?api-docs.json`)
+
 ## 📖 Panduan Pengembangan Lanjutan
 
 Untuk kontributor/developer baru, harap membaca dokumentasi onboarding khusus di masing-masing sub-proyek untuk memahami konvensi koding (seperti pola BFF Proxy, Shared Validations, dan model attribute-based Eloquent):

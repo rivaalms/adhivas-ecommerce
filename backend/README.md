@@ -89,6 +89,15 @@ php artisan serve
 
 ---
 
+## 📜 Dokumentasi Swagger
+
+Anda dapat mengakses dokumentasi Swagger API pada endpoint berikut:
+
+- [JSON](#) (`/docs?api-docs.json`)
+- [Swagger UI](#) (`/api/documentation`)
+
+---
+
 ## 🎨 Konvensi Pengkodingan & Pola Penting
 
 Harap ikuti standar koding berikut saat menambahkan fitur baru ke backend:
