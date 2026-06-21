@@ -87,6 +87,11 @@ watch(
    }
 )
 
+watch(
+   () => query.page,
+   () => refresh()
+)
+
 watchExcludable(
    () => query,
    (value) => {
@@ -97,7 +102,7 @@ watchExcludable(
       refresh()
    },
    {
-      exclude: ["search", "category_id", "sort_by", "sort_dir"],
+      exclude: ["page", "search", "category_id", "sort_by", "sort_dir"],
    }
 )
 
