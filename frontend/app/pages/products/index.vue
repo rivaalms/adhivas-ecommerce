@@ -53,6 +53,7 @@ const { data, pending, refresh } = useApi(`/api/products`, {
          meta: res.data.meta,
       }
    },
+   deep: true,
 })
 
 watch(
