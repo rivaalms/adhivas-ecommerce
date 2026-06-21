@@ -1,116 +1,131 @@
-# Nuxt Project Template 🚀
+# 🚀 Panduan Onboarding Frontend — Adhivas E-Commerce
 
-Selamat datang di template proyek Nuxt! Repository ini adalah boilerplate terstruktur yang dirancang untuk mempercepat pengembangan aplikasi frontend modern dengan integrasi server BFF (Backend-for-Frontend) yang kuat, aman, dan ramah terhadap AI Coding Agents (_vibe-coding_).
+Selamat datang di repositori frontend **Adhivas E-Commerce**! Repositori ini dibangun menggunakan **Nuxt v4** (Single Page Application, `ssr: false`) dan bertindak sebagai antarmuka pelanggan (Customer Portal) sekaligus Panel Administrasi (Admin Dashboard).
+
+Frontend ini terhubung dengan Laravel API di backend melalui arsitektur **BFF (Backend-for-Frontend)** yang terintegrasi di dalam Nitro Server Nuxt.
 
 ---
 
 ## 🛠️ Stack Teknologi
 
-Template ini menggunakan kombinasi teknologi modern berikut:
-
-- **Framework**: [Nuxt v4](https://nuxt.com/) (Single Page Application, `ssr: false`)
+- **Core Framework**: [Nuxt v4](https://nuxt.com/) (SPA Mode, `ssr: false`)
 - **UI & Styling**: [Nuxt UI v4](https://ui.nuxt.com) & [Tailwind CSS v4](https://tailwindcss.com)
-- **State Management**: [Pinia](https://pinia.vuejs.org) + [pinia-plugin-persistedstate](https://prazdevs.github.io/pinia-plugin-persistedstate/) (`localStorage`)
-- **Validasi**: [Zod](https://zod.dev)
-- **Date Utility**: [Day.js](https://day.js.org) (default timezone `Asia/Jakarta`, locale `id`)
+- **Data Visualization**: [@unovis/vue](https://unovis.dev/) & `@unovis/ts` (digunakan pada dashboard admin)
+- **State Management**: [Pinia](https://pinia.vuejs.org) + [pinia-plugin-persistedstate](https://prazdevs.github.io/pinia-plugin-persistedstate/) (untuk menyimpan global state)
+- **Validasi Skema**: [Zod](https://zod.dev) (skema validasi)
+- **Date Utilities**: [Day.js](https://day.js.org) (timezone default `Asia/Jakarta`, locale `id`)
 - **Composables**: [VueUse](https://vueuse.org)
-- **Linting & Formatting**: [ESLint](https://eslint.org) Flat Config (v9+) terintegrasi dengan `@nuxt/eslint` dan `eslint-plugin-prettier`
-- **Peralatan**: [Prettier](https://prettier.io) (konfigurasi: `tabWidth: 3`, double-quotes, no-semicolon)
-
----
-
-## 🚀 Memulai (Setup Cepat)
-
-Pastikan Anda menggunakan Node.js versi terbaru (LTS direkomendasikan) dan `pnpm` sebagai package manager.
-
-### 1. Instalasi Dependencies
-
-```bash
-pnpm install
-```
-
-### 2. Jalankan Development Server
-
-Memulai server lokal pada port `http://localhost:3000`:
-
-```bash
-pnpm dev
-```
-
-### 3. Build untuk Produksi
-
-```bash
-# Build aplikasi
-pnpm build
-
-# Preview hasil build lokal
-pnpm preview
-```
-
-### 4. Format & Lint Kode
-
-Proyek ini menegakkan aturan pemformatan dan linter yang ketat. Selalu jalankan format dan pengecekan kode sebelum membuat commit:
-
-```bash
-# Memformat kode menggunakan Prettier
-pnpm format
-
-# Menjalankan ESLint (dengan integrasi Prettier)
-pnpm lint
-
-# Menjalankan ESLint auto-fix
-pnpm exec eslint . --fix
-```
 
 ---
 
 ## 📂 Struktur Direktori Utama
 
-Kami membagi kode ke dalam tiga bagian utama (sesuai konvensi Nuxt 4):
+Arsitektur folder mengikuti konvensi **Nuxt 4** untuk kerapian dan keamanan kode:
 
-- [app/](/app): Area pengembangan frontend utama (pages, components, layouts, stores, utils).
-- [server/](/server): Nitro Server yang berfungsi sebagai Backend-For-Frontend (BFF).
-- [shared/](/shared): Berisi tipe data TypeScript global ([shared/types/](/shared/types)) dan utilitas/skema validasi Zod ([shared/utils/](/shared/utils)) yang digunakan bersama oleh `app/` dan `server/`.
-
-> [!IMPORTANT]
-> **Aturan Auto-Import Nuxt 4 di Direktori `shared/`**:
-> Hanya berkas di level teratas `shared/utils/` yang di-scan secara otomatis. Untuk modul dalam subdirektori (misal `shared/utils/validations/auth.ts`), Anda **wajib** mengekspornya kembali (_re-export_) di [shared/utils/index.ts](/shared/utils/index.ts) agar auto-import bekerja dengan baik.
-
----
-
-## 🎨 Pola Pengembangan & Konvensi Koding
-
-Sebelum Anda mulai menulis kode, harap pahami arsitektur template ini yang terperinci di dalam berkas panduan utama:
-
-👉 **[PANDUAN LENGKAP ARSITEKTUR & VIBE-CODING (VIBE_GUIDE.md)](/VIBE_GUIDE.md)**
-
-Berikut adalah rangkuman singkat pola penting yang digunakan:
-
-### 1. BFF (Backend-For-Frontend) Proxy
-
-Client tidak memanggil API pihak ketiga secara langsung. Client mengirim request ke endpoint di `server/api/` yang kemudian diteruskan menggunakan [$serverApi](/server/utils/$serverApi.ts). Helper ini otomatis:
-
-- Membaca dan menyuntikkan token otentikasi dari cookie `auth-token`.
-- Menghapus cookie otentikasi jika mendapat respons `401 Unauthorized` dari API pihak ketiga.
-- _Type Safety_: Endpoint server wajib menyertakan method `toJSON()` agar TypeScript client dapat membaca tipe data respons secara otomatis.
-
-### 2. Request API di Client (`useApi` & `$api`)
-
-- **`useApi`**: Gunakan custom composable [useApi](/app/composables/useApi.ts) untuk memanggil API lokal secara reaktif. Secara default, `watch: false` untuk mencegah request duplikat saat parameter reaktif berubah. Jika terjadi error, toast notifikasi kesalahan akan otomatis muncul secara global.
-- **`$api`**: Untuk request imperatif sekali jalan tanpa reactivity (seperti submit form), gunakan langsung [$api](/app/utils/$api.ts). `$api` adalah instance `$fetch` kustom yang dikonfigurasi di [app/utils/$api.ts](/app/utils/$api.ts). Ini di-auto-import secara otomatis oleh Nuxt.
-
-### 3. Sistem Modal Global
-
-Membuka modal kini dapat dilakukan secara programatis di mana saja menggunakan Pinia store [appStore](/app/stores/app.ts) dan fungsi render `h()` dari Vue. Baca selengkapnya di [modal-form.vue](/app/pages/modal-form.vue) sebagai contoh implementasi.
+```text
+frontend/
+├── app/                  # Direktori Utama Frontend (Vue App)
+│   ├── assets/           # Global CSS (main.css) dan aset statis
+│   ├── components/       # Komponen UI global (DataTable, ConfirmationPrompt)
+│   │   └── form/         # Komponen form dinamis (FormAddress, FormProduct, dll.)
+│   ├── composables/      # Reactivity helpers kustom (useApi, dll.)
+│   ├── layouts/          # Tata letak halaman (default untuk Customer, admin untuk Admin)
+│   ├── middleware/       # Route guards global (auth.global.ts untuk role check)
+│   ├── pages/            # Routing berbasis berkas (Customer & Admin)
+│   ├── stores/           # Pinia Stores (app, auth, cart)
+│   └── utils/            # Utilitas helper client-side ($api)
+├── server/               # Nitro Server (BFF Engine)
+│   ├── api/              # API Endpoints lokal yang bertindak sebagai proxy
+│   │   └── dashboard/    # Endpoints analitik (stats, status-breakdown, sales-trend)
+│   └── utils/            # BFF core helper ($serverApi.ts untuk Laravel communication)
+├── shared/               # Kode Bersama (Shared Code)
+│   ├── types/dto/        # Tipe TypeScript DTO global (dashboard.d.ts, order.d.ts, dll.)
+│   └── utils/            # Validasi bersama Zod (address.ts, auth.ts, dll.)
+└── package.json          # Manajemen dependensi frontend
+```
 
 ---
 
-## 🤖 Menulis Kode dengan AI Agent (Vibe-Coding)
+## 🚀 Langkah Memulai (Setup Cepat)
 
-Jika Anda menggunakan AI coding assistant (seperti Cursor, Claude, Gemini, dll.) untuk menulis kode di proyek ini, terdapat [AGENTS.md](/AGENTS.md) berisi rules yang **wajib** dipatuhi oleh AI agent. Jika diperlukan, **berikan berkas [VIBE_GUIDE.md](/VIBE_GUIDE.md) kepada AI Anda** sebagai konteks lebih lengkap sebelum meminta bantuan. Berkas-berkas tersebut berisi instruksi terperinci untuk AI agar:
+### 1. Prasyarat (Prerequisites)
+- Gunakan Node.js versi terbaru (LTS direkomendasikan).
+- Gunakan **`pnpm`** sebagai package manager utama.
 
-1. Mengikuti format Prettier (tabWidth: 3, double quotes, no-semicolon).
-2. Menghindari penulisan `import` manual yang redundan karena auto-import Nuxt.
-3. Memasukkan komponen ke dalam virtual package `#components` jika memanggil modal via render function `h()`.
-4. Menambahkan dynamic class ke konfigurasi `@source` di [main.css](/app/assets/css/main.css) agar Tailwind v4 mengompilasi utility classes dengan benar saat runtime.
-5. Memastikan semua kode lolos uji linter dengan menjalankan `pnpm lint` dan mematuhi aturan import yang ketat (`no-restricted-imports`).
+### 2. Instalasi Dependensi
+```bash
+pnpm install
+```
+
+### 3. Konfigurasi Environment (`.env`)
+Salin template `.env` (jika belum ada) dan sesuaikan URL API Laravel backend Anda:
+```bash
+cp .env.example .env
+```
+Isi konfigurasi dalam berkas `.env`:
+```env
+# URL Laravel Backend API
+API_URL=http://localhost:8000
+```
+
+### 4. Menjalankan Server Development
+```bash
+pnpm dev
+```
+Aplikasi frontend Anda sekarang berjalan dan dapat diakses di `http://localhost:3000`.
+
+### 5. Standardisasi Kode & Pemformatan (Format & Lint)
+Kami menerapkan aturan format kode dan linter yang ketat:
+```bash
+# Memformat kode menggunakan Prettier
+pnpm format
+
+# Mengecek linter ESLint
+pnpm lint
+```
+
+---
+
+## 🎨 Konvensi Pengkodingan & Pola Penting
+
+Untuk mempertahankan kebersihan dan integritas kode, harap patuhi pola-pola arsitektur berikut:
+
+### 1. Pola BFF (Backend-For-Frontend) Proxy
+Client di frontend **tidak pernah** menembak langsung ke port Laravel API (8000) untuk menjaga keamanan cookie & token. Semua request melewati Nuxt Server API (`server/api/`):
+- Gunakan helper [$serverApi](/server/utils/$serverApi.ts) di server-side untuk mem-proxy request. Helper ini otomatis menyuntikkan token otorisasi Bearer dari cookie `auth-token` dan menghapusnya jika server merespons dengan `401 Unauthorized`.
+- Setiap endpoint BFF wajib mengembalikan fungsi `toJSON()` agar TypeScript dapat secara otomatis mengenali DTO tipe data respons di sisi client.
+
+### 2. Memanggil API di Client (`useApi` & `$api`)
+- **`useApi` (Reaktif)**: Gunakan custom composable [useApi](/app/composables/useApi.ts) untuk `fetching` data yang membutuhkan reaktivitas (seperti pagination, filter, dll.). Secara default, `watch: false` untuk mencegah request duplikat. Anda dapat memantau parameter dengan memasukkannya ke properti `watch`.
+- **`$api` (Imperatif)**: Gunakan `$api` langsung untuk aksi satu kali (seperti submit form POST/PUT/DELETE) tanpa membutuhkan state reaktif.
+
+### 3. Validasi Bersama (Shared Validation)
+Skema validasi didefinisikan menggunakan **Zod** di dalam folder `shared/utils/validations/` agar dapat digunakan bersama di client-side (untuk umpan balik instan di form input) dan server-side:
+- **PENTING**: Sesuai mekanisme Nuxt 4, ekspor kembali skema validasi baru Anda di dalam [shared/utils/index.ts](/shared/utils/index.ts) agar ter-auto-import secara otomatis di mana saja tanpa import manual.
+
+### 4. Sistem Modal Global
+Modal form (seperti Tambah/Edit Produk, Kategori, atau Alamat) dikendalikan secara programatis menggunakan [appStore](/app/stores/app.ts):
+- Anda tidak perlu memuat markup modal di setiap halaman. Cukup panggil `appStore.openModal(...)` dengan komponen form yang diinginkan.
+- Komponen form yang akan dibuka melalui modal harus diimpor dari virtual package `#components` jika dipanggil via fungsi render `h()`.
+
+---
+
+## 📊 Halaman & Alur Utama Aplikasi
+
+### 🔑 Autentikasi & Guarding
+- Berkas [auth.global.ts](/app/middleware/auth.global.ts) bertindak sebagai route middleware global.
+- Pengguna dengan peran `admin` otomatis diarahkan ke rute `/admin` dan diblokir dari rute customer.
+- Pengguna dengan peran `customer` diarahkan ke rute `/` (Beranda) dan diblokir dari mengakses rute `/admin/*`.
+
+### 🛒 Portal Customer
+- **Katalog & Filter** (`/products`): Halaman listing produk lengkap dengan filter kategori reaktif dan sorting.
+- **Manajemen Profil & Alamat** (`/profile`): Memuat informasi profil akun dan daftar alamat pengiriman. Form alamat terintegrasi dengan cascading dropdown searchable dari API publik `wilayah.id` (Provinsi -> Kota/Kabupaten -> Kecamatan -> Kelurahan).
+- **Proses Order** (`/checkout` & `/orders`): Menyusun pesanan dari keranjang belanja utama dan melacak daftar pesanan yang pernah dibuat oleh pelanggan.
+
+### 👑 Portal Admin (`/admin`)
+- **Dashboard Analitik** (`/admin/index.vue`): Menyajikan statistik bisnis toko online:
+  - **KPI Cards**: Menampilkan Total Pendapatan, Total Pesanan, dan Rata-rata Nilai Order (hanya menghitung order dengan status `completed`).
+  - **Filter Range Tanggal**: Mendukung kueri filter reaktif (`start_date` & `end_date`) dengan opsi preset cepat.
+  - **Line Chart**: Menampilkan distribusi status order (menggunakan komponen visualisasi Unovis).
+  - **Donut Chart**: Menampilkan tren pendapatan harian dari order `completed` (menggunakan komponen visualisasi Unovis).
+- **CRUD Panel**: Manajemen penuh atas data **Kategori Produk** (`/admin/categories`), **Daftar Produk** (`/admin/products`), dan **Daftar Order** (`/admin/orders`) termasuk pengubahan status pengiriman order.
