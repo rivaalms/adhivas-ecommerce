@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserAddressController;
@@ -19,6 +20,9 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
 });
 
 Route::middleware('auth:api')->group(function () {
+    Route::get('dashboard/stats', [DashboardController::class, 'stats']);
+    Route::get('dashboard/status-breakdown', [DashboardController::class, 'statusBreakdown']);
+    Route::get('dashboard/sales-trend', [DashboardController::class, 'salesTrend']);
     Route::apiResource('products', ProductController::class);
     Route::apiResource('categories', CategoryController::class);
     Route::apiResource('addresses', UserAddressController::class);
