@@ -28,6 +28,7 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('categories', CategoryController::class);
     Route::apiResource('addresses', UserAddressController::class);
     Route::get('users', [UserController::class, 'index']);
+    Route::get('users/{id}', [UserController::class, 'show']);
     Route::patch('orders/{id}/status', [OrderController::class, 'updateStatus']);
     Route::apiResource('orders', OrderController::class);
     Route::get('cart', [CartController::class, 'index']);

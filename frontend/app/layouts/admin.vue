@@ -48,6 +48,11 @@ const navigationItem = [
          to: "/admin/orders",
          icon: "lucide:shopping-cart",
       },
+      {
+         label: "Daftar Customer",
+         to: "/admin/customers",
+         icon: "lucide:users",
+      },
    ],
 ] satisfies NavigationMenuItem[][]
 </script>

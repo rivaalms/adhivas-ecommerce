@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserRoleEnum;
 use App\Http\Resources\UserCollection;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -27,5 +28,16 @@ class UserController extends Controller
             ->paginate($request->input('per_page', 10));
 
         return $this->response(new UserCollection($users), 'Users retrieved successfully');
+    }
+
+    public function show(Request $request, string $id)
+    {
+        if (Auth::user()->role === UserRoleEnum::CUSTOMER) {
+            return $this->response(Auth::user(), 'User retrieved successfully');
+        }
+
+        $user = User::findOrFail($id);
+
+        return $this->response($user, 'User retrieved successfully');
     }
 }
