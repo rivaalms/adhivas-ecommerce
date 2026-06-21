@@ -23,6 +23,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('dashboard/stats', [DashboardController::class, 'stats']);
     Route::get('dashboard/status-breakdown', [DashboardController::class, 'statusBreakdown']);
     Route::get('dashboard/sales-trend', [DashboardController::class, 'salesTrend']);
+    Route::post('products/{id}/upload', [ProductController::class, 'uploadImage']);
     Route::apiResource('products', ProductController::class);
     Route::apiResource('categories', CategoryController::class);
     Route::apiResource('addresses', UserAddressController::class);

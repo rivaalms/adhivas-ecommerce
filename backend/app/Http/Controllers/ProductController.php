@@ -8,6 +8,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -125,5 +126,32 @@ class ProductController extends Controller
         $product->delete();
 
         return $this->response(null, 'Product deleted successfully');
+    }
+
+    /**
+     * Upload product image.
+     */
+    public function uploadImage(Request $request, $id)
+    {
+        Gate::authorize('role:admin', Auth::user());
+
+        $request->validate([
+            'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:2048'],
+        ]);
+
+        $product = Product::find($id);
+
+        if (! $product) {
+            return $this->response(null, 'Product not found', 404);
+        }
+
+        $file = $request->file('image');
+        $path = $file->store('products', 'public');
+        $url = Storage::disk('public')->url($path);
+
+        $product->image_url = $url;
+        $product->save();
+
+        return $this->response(new ProductResource($product), 'Image uploaded successfully');
     }
 }
