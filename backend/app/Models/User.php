@@ -14,6 +14,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Override;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
+use OpenApi\Attributes as OA;
 
 /**
  * @property int $id
@@ -25,6 +26,19 @@ use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
+#[OA\Schema(
+    schema: 'User',
+    type: 'object',
+    required: ['id', 'full_name', 'email', 'role'],
+    properties: [
+        new OA\Property(property: 'id', type: 'integer', example: 1),
+        new OA\Property(property: 'full_name', type: 'string', example: 'John Doe'),
+        new OA\Property(property: 'email', type: 'string', example: '[EMAIL_ADDRESS]'),
+        new OA\Property(property: 'role', ref: UserRoleEnum::class),
+        new OA\Property(property: 'created_at', type: 'string', example: '2022-01-01T00:00:00.000000Z'),
+        new OA\Property(property: 'updated_at', type: 'string', example: '2022-01-01T00:00:00.000000Z'),
+    ]
+)]
 #[Fillable(['full_name', 'email', 'password', 'role'])]
 #[Hidden(['password'])]
 class User extends Authenticatable implements JWTSubject
