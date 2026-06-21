@@ -1,5 +1,11 @@
 <script setup lang="ts">
 const appStore = useAppStore()
+
+useHead({
+   titleTemplate: (chunk) =>
+      chunk ? `${chunk} - Adhivas Ecommerce` : "Adhivas Ecommerce",
+   link: [{ rel: "icon", type: "image/svg+xml", href: "/logo.svg" }],
+})
 </script>
 
 <template>
